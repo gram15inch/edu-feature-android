@@ -4,8 +4,9 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Source/prototype/nursehelper2.0/RecyclerviewWithIndex/app/src/main/res/layout/activity_main.xml" value="0.1" />
-        <entry key="..\:/Source/prototype/nursehelper2.0/RecyclerviewWithIndex/app/src/main/res/layout/fragment_home.xml" value="0.11200000000000002" />
+        <entry key="..\:/Source/prototype/nursehelper2.0/RecyclerviewWithIndex/app/src/main/res/layout/fragment_home.xml" value="0.136" />
         <entry key="..\:/Source/prototype/nursehelper2.0/RecyclerviewWithIndex/app/src/main/res/layout/fragment_utill.xml" value="0.27395833333333336" />
+        <entry key="..\:/Source/prototype/nursehelper2.0/RecyclerviewWithIndex/app/src/main/res/layout/index_horizental.xml" value="0.2" />
         <entry key="..\:/Source/prototype/nursehelper2.0/RecyclerviewWithIndex/app/src/main/res/layout/item_list_item.xml" value="0.136" />
       </map>
     </option>

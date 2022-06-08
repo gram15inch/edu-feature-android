@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name = "index_element">
+        <item name = "android:text">0</item>
+        <item name = "android:textSize">20dp</item>
+        <item name="android:layout_marginVertical">2dp</item>
+        <item name="android:layout_marginHorizontal">4dp</item>
+    </style>
+
+</resources>

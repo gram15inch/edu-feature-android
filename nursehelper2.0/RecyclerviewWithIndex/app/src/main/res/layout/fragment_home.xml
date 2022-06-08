@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.home.HomeFragment">
 
     <!-- TODO: Update blank fragment layout -->
@@ -15,22 +16,20 @@
 
         />
 
-    <TextView
+    <include
         android:id="@+id/index_horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="1.2.3.4.5.6.7.8.9.10.11.12.13.14.15"
-        android:textSize="20dp"
         android:layout_below="@id/title"
+        layout="@layout/index_horizontal"/>
 
-        />
 
     <TextView
         android:id="@+id/index_vertical"
         android:layout_width="23dp"
         android:layout_height="wrap_content"
         android:layout_below="@id/index_horizontal"
-        android:text="1 2 3 4 5 6 7 8 9 10 11 12 13 14 15"
+        android:text="1 2 3 4 5 6 7 8 9 10 11 12"
         android:textSize="20dp"
 
         />
@@ -44,7 +43,7 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn1"
-        android:layout_width="40dp"
+        android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:text="1"
         android:layout_below="@id/recyclerView"
@@ -52,18 +51,32 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn2"
-        android:layout_width="40dp"
+        android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:layout_below="@id/recyclerView"
         android:layout_toEndOf="@id/btn1"
-        android:text="2" />
+        android:text="7" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn3"
-        android:layout_width="40dp"
+        android:layout_width="80dp"
         android:layout_height="wrap_content"
-        android:text="2"
         android:layout_below="@id/recyclerView"
-        android:layout_toEndOf="@id/btn2"/>
+        android:layout_toEndOf="@id/btn2"
+        android:text="15" />
 
+    <TextView
+        android:id="@+id/positionXYText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btn1"
+        android:layout_toEndOf="@id/index_vertical"
+        android:text="positionXYText"
+        android:textSize="20dp" />
+
+    <com.nuhlp.recyclerviewwithindex.components.IndexHorizontal
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/positionXYText"
+        app:indexString ="1 2 3 4 5 6 7 8 9 10 11 12"/>
 </RelativeLayout>
