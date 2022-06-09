@@ -45,9 +45,9 @@
         android:id="@+id/btn1"
         android:layout_width="80dp"
         android:layout_height="wrap_content"
-        android:text="1"
         android:layout_below="@id/recyclerView"
-        android:layout_toEndOf="@id/index_vertical"/>
+        android:layout_toEndOf="@id/index_vertical"
+        android:text="1" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn2"
@@ -75,8 +75,33 @@
         android:textSize="20dp" />
 
     <com.nuhlp.recyclerviewwithindex.components.IndexHorizontal
+        android:id="@+id/mutable_index_horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/positionXYText"
-        app:indexString ="1 2 3 4 5 6 7 8 9 10 11 12"/>
+        app:indexString="1 2 3 4 5 6 7 8 9 10 11 12" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn1_index_size"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/mutable_index_horizontal"
+        android:layout_toEndOf="@id/index_vertical"
+        android:text="10" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn2_index_size"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/mutable_index_horizontal"
+        android:layout_toEndOf="@id/btn1"
+        android:text="20" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn3_index_size"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/mutable_index_horizontal"
+        android:layout_toEndOf="@id/btn2"
+        android:text="30" />
 </RelativeLayout>

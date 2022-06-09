@@ -35,21 +35,16 @@ class ExampleUnitTest {
         for (c in clist){
             if(ai.hasNext()){
                 c.text= ai.next()
-            }else
-                c.text="*"
+                c.isShow = true
+            }
         }
     }
     fun setElements2() {
         val a =  str.split(" ")
         val ai= a.iterator()
-        for (c in clist){
-            if(ai.hasNext()){
-                c.text= ai.next()
-            }else
-                c.text="*"
-        }
+        val clistS = clist.asSequence()
+        clistS.filter { ai.hasNext() }.map { it.text = ai.next(); it.isShow = true }.toList()
 
-        clist.map {  }
     }
 
     @Test
@@ -69,6 +64,7 @@ class ExampleUnitTest {
 
     class MyTextView{
         var text ="0"
+        var isShow = false
     }
 }
 

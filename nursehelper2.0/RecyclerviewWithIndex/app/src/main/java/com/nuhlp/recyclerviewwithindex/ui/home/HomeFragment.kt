@@ -7,6 +7,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.databinding.adapters.ViewGroupBindingAdapter.setListener
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,6 +24,7 @@ class HomeFragment :BaseViewBindingFragment<FragmentHomeBinding>()  {
     lateinit var _layoutManager: LinearLayoutManager
     val positionXY = MutableLiveData<List<Float>>()
 
+
     @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -37,11 +39,6 @@ class HomeFragment :BaseViewBindingFragment<FragmentHomeBinding>()  {
         _layoutManager = LinearLayoutManager(this.context,LinearLayoutManager.HORIZONTAL,false)
         binding.recyclerView.layoutManager =_layoutManager
 
-        val smoothScroller = object : LinearSmoothScroller(context) {
-            override fun getHorizontalSnapPreference(): Int {
-                return SNAP_TO_START
-            }
-        }
         _layoutManager.scrollToPositionWithOffset(15,0)
         positionXY.observe(viewLifecycleOwner){
             binding.positionXYText.text = it[0].toString() + it[1].toString()
@@ -56,23 +53,47 @@ class HomeFragment :BaseViewBindingFragment<FragmentHomeBinding>()  {
             //리턴값은 return 없이 아래와 같이
             true
         }*/
-        binding.btn1.setOnClickListener {
-           // todo 어답터 위치 이동부터
+
+        setListener()
+
+    }
+    fun setListener()= binding.apply {
+
+        val smoothScroller = object : LinearSmoothScroller(context) {
+            override fun getHorizontalSnapPreference(): Int {
+                return SNAP_TO_START
+            }
+        }
+        btn1.setOnClickListener {
+            // todo 어답터 위치 이동부터
             smoothScroller.targetPosition = 0
             _layoutManager.startSmoothScroll(smoothScroller)
         }
-        binding.btn2.setOnClickListener {
+        btn2.setOnClickListener {
             smoothScroller.targetPosition = 15
             _layoutManager.startSmoothScroll(smoothScroller)
         }
-        binding.btn3.setOnClickListener {
+        btn3.setOnClickListener {
             smoothScroller.targetPosition = 30
             _layoutManager.startSmoothScroll(smoothScroller)
         }
 
-
+        btn1IndexSize.setOnClickListener {
+            mutableIndexHorizontal.setElements(createIndexNum(10))
+        }
+        btn2IndexSize.setOnClickListener {
+            mutableIndexHorizontal.setElements(createIndexNum(20))
+        }
+        btn3IndexSize.setOnClickListener {
+            mutableIndexHorizontal.setElements(createIndexNum(30))
+        }
     }
-
+    fun createIndexNum(size:Int):String{
+        var str = ""
+        for (i  in 1..size )
+            str += "$i "
+        return str
+    }
     override fun getFragmentBinding(
         inflater: LayoutInflater,
         container: ViewGroup?,
