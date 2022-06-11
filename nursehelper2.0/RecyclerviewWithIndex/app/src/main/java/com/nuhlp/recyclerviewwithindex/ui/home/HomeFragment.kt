@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.SmoothScroller
+import com.nuhlp.recyclerviewwithindex.R
 import com.nuhlp.recyclerviewwithindex.adapter.ItemListAdapter
 import com.nuhlp.recyclerviewwithindex.base.BaseViewBindingFragment
 import com.nuhlp.recyclerviewwithindex.databinding.FragmentHomeBinding
@@ -22,10 +23,12 @@ import com.nuhlp.recyclerviewwithindex.databinding.FragmentHomeBinding
 class HomeFragment :BaseViewBindingFragment<FragmentHomeBinding>()  {
     private val viewModel: HomeViewModel by activityViewModels { HomeViewModelFactory() }
     lateinit var _layoutManager: LinearLayoutManager
-    val positionXY = MutableLiveData<List<Float>>()
+    val positionRawXY = MutableLiveData<List<Float>>()
+    var positionXY = MutableLiveData<List<Float>>()
+    var checkText = MutableLiveData<String>()
 
 
-    @SuppressLint("ClickableViewAccessibility")
+    @SuppressLint("ClickableViewAccessibility", "SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val adapter = ItemListAdapter {}
@@ -35,28 +38,26 @@ class HomeFragment :BaseViewBindingFragment<FragmentHomeBinding>()  {
             }
         }
         viewModel.updateDocs(30)
+
         binding.recyclerView.adapter = adapter
         _layoutManager = LinearLayoutManager(this.context,LinearLayoutManager.HORIZONTAL,false)
         binding.recyclerView.layoutManager =_layoutManager
 
         _layoutManager.scrollToPositionWithOffset(15,0)
-        positionXY.observe(viewLifecycleOwner){
-            binding.positionXYText.text = it[0].toString() + it[1].toString()
+
+        positionRawXY.observe(viewLifecycleOwner){
+          binding.positionXYText.text = "rawX: ${it[0]} rawY: ${it[1]} \n ${it[2]} ${it[3]}"
+            binding.eventText.x = it[0] - it[2]
+            binding.eventText.y = it[1]  - 150
         }
-/*
-        binding.indexHorizontal.setOnTouchListener { v, event ->
-            when(event.action) {
-                MotionEvent.ACTION_MOVE -> {
-                    positionXY.value = listOf(event.rawX,event.rawY)
-                }
-            }
-            //리턴값은 return 없이 아래와 같이
-            true
-        }*/
+        checkText.observe(viewLifecycleOwner){
+            binding.checkText.text = checkText.value
+        }
 
         setListener()
 
     }
+    @SuppressLint("ClickableViewAccessibility")
     fun setListener()= binding.apply {
 
         val smoothScroller = object : LinearSmoothScroller(context) {
@@ -87,6 +88,30 @@ class HomeFragment :BaseViewBindingFragment<FragmentHomeBinding>()  {
         btn3IndexSize.setOnClickListener {
             mutableIndexHorizontal.setElements(createIndexNum(30))
         }
+
+        eventText.setOnTouchListener { v, event ->
+            when(event.action) {
+                MotionEvent.ACTION_MOVE -> {
+                    positionRawXY.value = listOf(event.rawX,event.rawY,positionXY.value!![0],positionXY.value!![1])
+                }
+                MotionEvent.ACTION_UP ->{ }
+                MotionEvent.ACTION_DOWN ->{ positionXY.value = listOf(event.x,event.y) }
+            }
+            //리턴값은 return 없이 아래와 같이
+            true
+        }
+
+      /*  mutableIndexHorizontal.setOnTouchListener { v, event ->
+            when(event.action){
+                MotionEvent.ACTION_MOVE ->{
+                       this@HomeFragment.checkText.value = "device : ${event.device}  \n  " +
+                               "classification : ${event.classification}  \n"
+                }
+            }
+            true
+        }
+        */
+
     }
     fun createIndexNum(size:Int):String{
         var str = ""
@@ -94,10 +119,9 @@ class HomeFragment :BaseViewBindingFragment<FragmentHomeBinding>()  {
             str += "$i "
         return str
     }
-    override fun getFragmentBinding(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-    ): FragmentHomeBinding {
+
+    override fun getFragmentBinding(inflater: LayoutInflater, container: ViewGroup?, )
+    : FragmentHomeBinding {
         return FragmentHomeBinding.inflate(inflater,container,false)
     }
 

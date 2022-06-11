@@ -1,5 +1,6 @@
 package com.nuhlp.recyclerviewwithindex.components
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -40,16 +41,23 @@ class IndexHorizontal(context: Context, attrs: AttributeSet) : LinearLayout(cont
 
 
     }
+    @SuppressLint("ClickableViewAccessibility")
     private fun setListener() =binding.apply {
 
         // todo 호버시 색변경
-        cList.map { it.setOnHoverListener { v, event ->
+        cList.map { it.setOnTouchListener { v, event ->
             when(event.action){
-                MotionEvent.ACTION_HOVER_ENTER->{ v.setBackgroundColor(resources.getColor(R.color.purple_200)); true}
-                MotionEvent.ACTION_HOVER_EXIT->{v.setBackgroundColor(resources.getColor(R.color.purple_500)); true}
+              /*  MotionEvent.ACTION_DOWN->{v.setBackgroundColor(resources.getColor(R.color.purple_200)); true}
+                MotionEvent.ACTION_UP->{v.setBackgroundColor(resources.getColor(R.color.white)); true}*
+               */
                 else->{false}
             }
         } }
+
+        /*this.root.setOnTouchListener { v, event ->
+            event.source
+            true
+        }*/
     }
     private fun onRefresh() {
         invalidate()
