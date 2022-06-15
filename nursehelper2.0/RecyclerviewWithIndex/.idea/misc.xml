@@ -3,10 +3,12 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Source/prototype/nursehelper2.0/RecyclerviewWithIndex/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1635" />
         <entry key="..\:/Source/prototype/nursehelper2.0/RecyclerviewWithIndex/app/src/main/res/drawable-v24/rect1.xml" value="0.1" />
+        <entry key="..\:/Source/prototype/nursehelper2.0/RecyclerviewWithIndex/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1635" />
         <entry key="..\:/Source/prototype/nursehelper2.0/RecyclerviewWithIndex/app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="..\:/Source/prototype/nursehelper2.0/RecyclerviewWithIndex/app/src/main/res/layout/coustom_view.xml" value="0.13697916666666668" />
-        <entry key="..\:/Source/prototype/nursehelper2.0/RecyclerviewWithIndex/app/src/main/res/layout/fragment_custom_view_prac.xml" value="0.1" />
+        <entry key="..\:/Source/prototype/nursehelper2.0/RecyclerviewWithIndex/app/src/main/res/layout/fragment_custom_view_prac.xml" value="0.264" />
         <entry key="..\:/Source/prototype/nursehelper2.0/RecyclerviewWithIndex/app/src/main/res/layout/fragment_home.xml" value="0.136" />
         <entry key="..\:/Source/prototype/nursehelper2.0/RecyclerviewWithIndex/app/src/main/res/layout/fragment_utill.xml" value="0.27395833333333336" />
         <entry key="..\:/Source/prototype/nursehelper2.0/RecyclerviewWithIndex/app/src/main/res/layout/index_horizental.xml" value="0.2" />
