@@ -1,6 +1,5 @@
 package com.nuhlp.recyclerviewwithindex.components
 
-import android.R.attr
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
@@ -24,13 +23,46 @@ class MyCustomView : View{
     )
 
     var pX = 45f
-    var pY = 100f
+    var pY = 120f
     var pT = "position Text"
 
     var unit  = MutableLiveData<Int>()
     var lastElement = 0
-    val rectD = resources.getDrawable(R.drawable.rect1, null)
+    val pickIc = resources.getDrawable(R.drawable.ic_rpic, null)
+
+    var indexSize = 25f
+    var indexSize2 = indexSize + 10f
+    var marginLeft = 15f
+    private lateinit var itemList : List<Int>
+
+    private fun updateItem(ver:Int) {
+        val list = mutableListOf<Int>()
+        when(ver){
+            1->{
+                for(i in 1..30)
+                    if(i%2 == 0)
+                        list.add(i)
+            }
+            2->{
+                for(i in 1..30)
+                    if(i%3 == 0)
+                        list.add(i)
+            }
+            else->{
+                for(i in 1..30)
+                        list.add(i)
+            }
+
+        }
+        itemList = list
+    }
+
     private val colors = Array(50) {false}
+    private val element_x_list = Array(50) {0f}
+
+    init {
+        updateItem(1)
+    }
 
     override fun draw(canvas: Canvas?) {
         super.draw(canvas)
@@ -45,31 +77,45 @@ class MyCustomView : View{
             val indexPaint = Paint().apply {
                 color = resources.getColor(R.color.black)
                 isAntiAlias = true
-                textSize = 25F
+                textSize = 25f
             }
-            var xPosition = 0f
-            for( c in 0..9){
-                if(c<=9)
-                    xPosition += 25
-                else
-                    xPosition += 40
 
+            var xPosition = marginLeft
+            itemList.forEachIndexed(){i,c->
+                xPosition +=
+                    if(c < 11)
+                        indexSize
+                    else
+                        indexSize2
+                element_x_list[i]= xPosition
+            }
 
+            itemList.forEachIndexed() {i,c->
 
-                if(colors[c])
+                // ** 마커 **
+                if(colors[i])
                 {   indexPaint.color = resources.getColor(R.color.purple_200)
-                    rect.set(c*25f + 12.5f,20f,c*25f+25+12.5f,40f)
-                    //drawRect(rect,indexPaint)
-                    rectD.setBounds(c*25 ,0,c*25+10+65,65)
-                    rectD.draw(canvas)
-                    //color = resources.getColor(R.color.white)
-                    //drawText("$c", 100f, 100f ,indexPaint)
-                    // todo 유닛 그래픽에 글자넣기
+                    //rect.set(c*25f + 12.5f,20f,c*25f+25+12.5f,40f) //위치
+                    pickIc.setBounds(i*25 ,0,i*25+10+85,100) // 위치
+                    pickIc.draw(canvas)
+
+                    val tp = Paint()
+                    tp.color = resources.getColor(R.color.white)
+
+                    tp.textSize = 45f
+                    drawText("$c", i*25f + 35f, 60f ,tp) // 글자
+
                 }
                 else
                     indexPaint.color = resources.getColor(R.color.black)
 
-                drawText("$c", xPosition, pY ,indexPaint)
+                // todo 1의자리 10의자리 별 위치 설정
+                // ** index **
+                val x = element_x_list[i] // index별 x위치
+                val y = pY
+                drawText("$c", x, y ,indexPaint)
+
+
             }
 
 
@@ -83,17 +129,18 @@ class MyCustomView : View{
         requestLayout()
     }
 
-
     fun getElement(x: Float) :Int {
         val toNineWidth = 25
-        val toHundredWidth = 45
+        val toHundredWidth = toNineWidth + 15
 
-       return when{
+        when{
             (x<0)->{ 0}
             (x>=0 && x<=toNineWidth*9)->{x.toInt()/toNineWidth }
-           (x>toNineWidth*9) -> 9
-           else -> 9
+           (x>toNineWidth*9) -> {x.toInt()/toHundredWidth }
+           else -> 30
         }
+
+        return 0
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -105,7 +152,7 @@ class MyCustomView : View{
 
                 colors?.set(lastElement,false)
                 val curElement = getElement(event.x)
-                // 거 준구형 장난이 너무 심한거 아니오!!
+
                 colors?.set(curElement,true)
                 unit.value = curElement
                 lastElement= curElement
@@ -113,7 +160,10 @@ class MyCustomView : View{
                 invalidate()
                 false // move 는 반드시 false 반환
             }
-            else -> true
+            else -> {
+                colors?.set(lastElement,false)
+                invalidate()
+                true}
         }
     }
 
