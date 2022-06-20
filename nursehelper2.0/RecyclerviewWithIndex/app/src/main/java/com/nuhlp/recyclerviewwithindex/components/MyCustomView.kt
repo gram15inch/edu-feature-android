@@ -30,9 +30,11 @@ class MyCustomView : View{
     var lastElement = 0
     val pickIc = resources.getDrawable(R.drawable.ic_rpic, null)
 
-    var indexSize = 25f
-    var indexSize2 = indexSize + 10f
+    var elementSize = 12f
+    var elementSize2 = elementSize + 12f
     var marginLeft = 15f
+    var pickerWidth = 90
+    var pickerHeight = 100
     private lateinit var itemList : List<Int>
 
     private fun updateItem(ver:Int) {
@@ -58,7 +60,10 @@ class MyCustomView : View{
     }
 
     private val colors = Array(50) {false}
-    private val element_x_list = Array(50) {0f}
+    private val pos_x_element = Array(50) {-1f}
+    private val pos_x_picker_index = Array(50) {-1f}
+    private val pos_x_picker_icon = Array(50) {-1f}
+
 
     init {
         updateItem(1)
@@ -77,17 +82,35 @@ class MyCustomView : View{
             val indexPaint = Paint().apply {
                 color = resources.getColor(R.color.black)
                 isAntiAlias = true
-                textSize = 25f
+                textSize = 24f
             }
 
-            var xPosition = marginLeft
+            var xPosElement = marginLeft
+
+            var xPosPickerIcon = 0f
+            var xPosPickerIndex = 0f
+
             itemList.forEachIndexed(){i,c->
-                xPosition +=
-                    if(c < 11)
-                        indexSize
-                    else
-                        indexSize2
-                element_x_list[i]= xPosition
+
+                if (c == 10) {
+                    xPosElement += elementSize+10f
+                    xPosPickerIcon = xPosElement - (pickerHeight - elementSize) / 2 + 5f
+                    xPosPickerIndex = xPosElement - (pickerHeight - elementSize) / 2 + 5f
+                } else if (c < 11) {
+                    xPosElement += elementSize+10f
+                    xPosPickerIcon = xPosElement - (pickerHeight - elementSize) / 2
+                    xPosPickerIndex = xPosElement - (pickerHeight - elementSize) / 2
+                } else {
+                    xPosElement += elementSize2+10f
+                    xPosPickerIcon = xPosElement - (pickerHeight - elementSize2) / 2 + 5f
+                    xPosPickerIndex = xPosElement - (pickerHeight - elementSize2) / 2 + 5f
+                }
+
+                pos_x_element[i] = xPosElement
+                pos_x_picker_icon[i] = xPosPickerIcon
+                pos_x_picker_index[i] = xPosPickerIndex
+
+
             }
 
             itemList.forEachIndexed() {i,c->
@@ -95,8 +118,7 @@ class MyCustomView : View{
                 // ** 마커 **
                 if(colors[i])
                 {   indexPaint.color = resources.getColor(R.color.purple_200)
-                    //rect.set(c*25f + 12.5f,20f,c*25f+25+12.5f,40f) //위치
-                    pickIc.setBounds(i*25 ,0,i*25+10+85,100) // 위치
+                    pickIc.setBounds(pos_x_picker_icon[i].toInt() ,0,pos_x_picker_icon[i].toInt()+pickerWidth, pickerHeight) // 위치
                     pickIc.draw(canvas)
 
                     val tp = Paint()
@@ -104,14 +126,13 @@ class MyCustomView : View{
 
                     tp.textSize = 45f
                     drawText("$c", i*25f + 35f, 60f ,tp) // 글자
-
                 }
                 else
                     indexPaint.color = resources.getColor(R.color.black)
-
-                // todo 1의자리 10의자리 별 위치 설정
+                //todo text 길이 체크
+                
                 // ** index **
-                val x = element_x_list[i] // index별 x위치
+                val x = pos_x_element[i] // index별 x위치
                 val y = pY
                 drawText("$c", x, y ,indexPaint)
 
@@ -130,17 +151,13 @@ class MyCustomView : View{
     }
 
     fun getElement(x: Float) :Int {
-        val toNineWidth = 25
-        val toHundredWidth = toNineWidth + 15
 
-        when{
-            (x<0)->{ 0}
-            (x>=0 && x<=toNineWidth*9)->{x.toInt()/toNineWidth }
-           (x>toNineWidth*9) -> {x.toInt()/toHundredWidth }
-           else -> 30
+        pos_x_element.filter { it > 0 }.forEachIndexed(){ i, e->
+            if(e>x)
+               return i
         }
 
-        return 0
+      return lastElement
     }
 
     @SuppressLint("ClickableViewAccessibility")
