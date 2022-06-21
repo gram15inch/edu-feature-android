@@ -28,16 +28,19 @@ class MyCustomView : View{
 
     var unit  = MutableLiveData<Int>()
     var lastElement = 0
-    val pickIc = resources.getDrawable(R.drawable.ic_rpic, null)
-
-    var elementSize = 12f
-    var elementSize2 = elementSize + 12f
+    val pickIc = resources.getDrawable(R.drawable.ic_rpiccut, null)
+    var elementGapH = 10f
+    var elementWidth = 13f
+    var elementWidth2 = 26f
     var marginLeft = 15f
-    var pickerWidth = 90
-    var pickerHeight = 100
+    var pickerIconWidth = 60
+    var pickerIconHeight = 90
+    var pickerIndexWidth = 24f
+    var pickerIndexWidth2 = 48f
+
     private lateinit var itemList : List<Int>
 
-    private fun updateItem(ver:Int) {
+    fun updateItem(ver:Int) {
         val list = mutableListOf<Int>()
         when(ver){
             1->{
@@ -57,6 +60,7 @@ class MyCustomView : View{
 
         }
         itemList = list
+        invalidate()
     }
 
     private val colors = Array(50) {false}
@@ -82,34 +86,41 @@ class MyCustomView : View{
             val indexPaint = Paint().apply {
                 color = resources.getColor(R.color.black)
                 isAntiAlias = true
-                textSize = 24f
+                textSize = 24f // 실제크기 : 13f
             }
+
 
             var xPosElement = marginLeft
 
             var xPosPickerIcon = 0f
             var xPosPickerIndex = 0f
 
+            var lastElementForWidth = 0
+            /* 1~99 까지 커버 */
             itemList.forEachIndexed(){i,c->
 
-                if (c == 10) {
-                    xPosElement += elementSize+10f
-                    xPosPickerIcon = xPosElement - (pickerHeight - elementSize) / 2 + 5f
-                    xPosPickerIndex = xPosElement - (pickerHeight - elementSize) / 2 + 5f
-                } else if (c < 11) {
-                    xPosElement += elementSize+10f
-                    xPosPickerIcon = xPosElement - (pickerHeight - elementSize) / 2
-                    xPosPickerIndex = xPosElement - (pickerHeight - elementSize) / 2
-                } else {
-                    xPosElement += elementSize2+10f
-                    xPosPickerIcon = xPosElement - (pickerHeight - elementSize2) / 2 + 5f
-                    xPosPickerIndex = xPosElement - (pickerHeight - elementSize2) / 2 + 5f
-                }
 
+
+
+               // if (c == 10) {
+                if(lastElementForWidth <= 9 && c>10){
+                    xPosElement += elementWidth + elementGapH
+                    xPosPickerIcon = xPosElement - pickerIconWidth / 2 + elementWidth2 / 2
+                    xPosPickerIndex = xPosPickerIcon + (pickerIconWidth - pickerIndexWidth2) / 2
+                } else if (c <= 10) {
+                    xPosElement += elementWidth + elementGapH
+                    xPosPickerIcon = xPosElement - pickerIconWidth / 2 + elementWidth / 2
+                    xPosPickerIndex = xPosPickerIcon + (pickerIconWidth - pickerIndexWidth) / 2
+                } else {
+                    xPosElement += elementWidth2 + elementGapH
+                    xPosPickerIcon = xPosElement - pickerIconWidth / 2 + elementWidth2 / 2
+                    xPosPickerIndex = xPosPickerIcon + (pickerIconWidth - pickerIndexWidth2) / 2
+                }
                 pos_x_element[i] = xPosElement
                 pos_x_picker_icon[i] = xPosPickerIcon
                 pos_x_picker_index[i] = xPosPickerIndex
 
+                lastElementForWidth = c
 
             }
 
@@ -118,25 +129,23 @@ class MyCustomView : View{
                 // ** 마커 **
                 if(colors[i])
                 {   indexPaint.color = resources.getColor(R.color.purple_200)
-                    pickIc.setBounds(pos_x_picker_icon[i].toInt() ,0,pos_x_picker_icon[i].toInt()+pickerWidth, pickerHeight) // 위치
+                    pickIc.setBounds(pos_x_picker_icon[i].toInt() ,0,pos_x_picker_icon[i].toInt()+pickerIconWidth, pickerIconHeight) // 위치
                     pickIc.draw(canvas)
 
                     val tp = Paint()
                     tp.color = resources.getColor(R.color.white)
-
                     tp.textSize = 45f
-                    drawText("$c", i*25f + 35f, 60f ,tp) // 글자
+                    drawText("$c", pos_x_picker_index[i], 50f ,tp) // 글자
                 }
                 else
                     indexPaint.color = resources.getColor(R.color.black)
-                //todo text 길이 체크
                 
                 // ** index **
                 val x = pos_x_element[i] // index별 x위치
                 val y = pY
                 drawText("$c", x, y ,indexPaint)
-
-
+                 val str = indexPaint.measureText("$c").toString()
+                //Log.d("indexComponent",str)
             }
 
 
@@ -164,15 +173,15 @@ class MyCustomView : View{
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         return when(event?.action){
             MotionEvent.ACTION_MOVE->{
-               /* val pxText = "${event.rawX.toInt()} / ${event.rawY.toInt()} \n ${event.x.toInt()} / ${event.y.toInt()}"
-                setPt(pxText)*/
+                /* val pxText = "${event.rawX.toInt()} / ${event.rawY.toInt()} \n ${event.x.toInt()} / ${event.y.toInt()}"
+                setPt(pxText) */
 
                 colors?.set(lastElement,false)
                 val curElement = getElement(event.x)
 
                 colors?.set(curElement,true)
                 unit.value = curElement
-                lastElement= curElement
+                lastElement = curElement
 
                 invalidate()
                 false // move 는 반드시 false 반환

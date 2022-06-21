@@ -22,13 +22,17 @@ class CustomViewPracFragment :BaseViewBindingFragment<FragmentCustomViewPracBind
         setObserver()
     }
 
+    var tmpN = 1
    private fun setListener()=binding.apply {
-
+        rect1.setOnClickListener {
+            myCustomView.updateItem((tmpN++)%3)
+        }
    }
     private fun setObserver()=binding.apply {
         myCustomView.unit.observe(viewLifecycleOwner){
             positionText.text = it.toString()
         }
+
     }
     override fun getFragmentBinding(
         inflater: LayoutInflater,
