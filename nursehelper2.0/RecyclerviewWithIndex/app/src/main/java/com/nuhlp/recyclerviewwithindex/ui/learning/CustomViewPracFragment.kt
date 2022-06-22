@@ -18,14 +18,15 @@ class CustomViewPracFragment :BaseViewBindingFragment<FragmentCustomViewPracBind
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.myCustomView.updateItem(createItem ((tmpN++)%3))
         setListener()
         setObserver()
     }
 
-    var tmpN = 1
+    var tmpN = 0
    private fun setListener()=binding.apply {
         rect1.setOnClickListener {
-            myCustomView.updateItem((tmpN++)%3)
+            myCustomView.updateItem(createItem ((tmpN++)%3))
         }
    }
     private fun setObserver()=binding.apply {
@@ -41,4 +42,25 @@ class CustomViewPracFragment :BaseViewBindingFragment<FragmentCustomViewPracBind
        return FragmentCustomViewPracBinding.inflate(inflater,container,false)
     }
 
+    fun createItem(i :Int):List<Int>{
+        val list = mutableListOf<Int>()
+        when(i){
+            1->{
+                for(i in 1..30)
+                    if(i%2 == 0)
+                        list.add(i)
+            }
+            2->{
+                for(i in 1..30)
+                    if(i%3 == 0)
+                        list.add(i)
+            }
+            else->{
+                for(i in 1..30)
+                    list.add(i)
+            }
+
+        }
+        return list
+    }
 }

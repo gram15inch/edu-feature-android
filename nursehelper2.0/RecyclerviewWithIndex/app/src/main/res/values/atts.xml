@@ -3,4 +3,7 @@
     <declare-styleable name="index_horizontal">
         <attr name="indexString" format="reference|string" />
     </declare-styleable>
+    <declare-styleable name="MyCustomView">
+        <attr name="isHorizontal" format="boolean" />
+    </declare-styleable>
 </resources>
