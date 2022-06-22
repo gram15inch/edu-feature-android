@@ -29,8 +29,10 @@ class MyCustomView : View{
 
     var lastElement = 0
     var elementGapH = 10f
+    var elementGapV = 10f
     var elementWidth = 13f
     var elementWidth2 = 25f
+    var elementHeight = 19f
     var marginLeft = 15f
     var pickerIconWidth = 60
     var pickerIconHeight = 90
@@ -43,6 +45,7 @@ class MyCustomView : View{
     private lateinit var pos_x_element :Array<Float>
     private lateinit var pos_x_picker_index :Array<Float>
     private lateinit var pos_x_picker_icon :Array<Float>
+
 
     private fun arrayInit(){
         colors = Array(50) {false}
@@ -85,16 +88,46 @@ class MyCustomView : View{
             isAntiAlias = true
             textSize = 24f // 실제크기 : 13f
         }
-        indexPaint.measureText("1")
-        indexPaint.textSize=45f
-        val y =33f
-        drawText("1",0f,y,indexPaint)
-        drawText("2",0f,y+33f,indexPaint)
-        drawText("3",0f,y+33f*2,indexPaint)
-        val str1= "1"
-        val rt = Rect()
-        indexPaint.getTextBounds(str1,0,str1.length,rt)
-        printLog(rt.bottom-rt.top)
+
+        var yPosElement = 0f
+
+        var yPosPickerIcon = 0f
+        var yPosPickerIndex = 0f
+        var lastElementForHeight = 0
+
+        /* 1~99 까지 커버 */
+        itemList.forEachIndexed(){i,c->
+            yPosElement += elementHeight + elementGapH
+            yPosPickerIcon = yPosElement - pickerIconWidth / 2 + elementWidth2 / 2
+            yPosPickerIndex = yPosPickerIcon + (pickerIconWidth - pickerIndexWidth2) / 2
+
+            pos_x_element[i] = yPosElement
+            pos_x_picker_icon[i] = yPosPickerIcon
+            pos_x_picker_index[i] = yPosPickerIndex
+            lastElementForHeight = c
+        }
+        // *** 마커 ***
+        itemList.forEachIndexed() {i,c->
+
+            // ** icon **
+            if(colors[i])
+            {   indexPaint.color = resources.getColor(R.color.purple_200)
+                pickIc.setBounds(0 ,pos_x_picker_icon[i].toInt(),pickerIconWidth, pos_x_picker_icon[i].toInt()+pickerIconHeight) // 위치
+                pickIc.draw(canvas)
+
+                val tp = Paint()
+                tp.color = resources.getColor(R.color.white)
+                tp.textSize = 45f
+
+                drawText("$c", 20f, pos_x_picker_index[i] ,tp) // 글자
+            }
+            else indexPaint.color = resources.getColor(R.color.black)
+
+            // ** index **
+            val x = 0f // index별 x위치
+            val y = pos_x_picker_index[i]
+            drawText("$c", x, y ,indexPaint)
+        }
     }
 
     private fun drawHorizontal(canvas: Canvas?)=canvas?.apply {
@@ -161,9 +194,14 @@ class MyCustomView : View{
         requestLayout()
     }
 
-    fun getElement(x: Float) :Int {
+    fun getElement(x: Float,y:Float) :Int {
+        if(isHorizontal)
         pos_x_element.filter { it > 0 }.forEachIndexed(){ i, e->
             if(e>x) return i
+        }
+        else
+        pos_x_element.filter { it > 0 }.forEachIndexed(){ i, e->
+            if(e>y) return i
         }
       return lastElement
     }
@@ -173,7 +211,7 @@ class MyCustomView : View{
         return when(event?.action){
             MotionEvent.ACTION_MOVE->{
                 colors?.set(lastElement,false)
-                val curElement = getElement(event.x)
+                val curElement = getElement(event.x,event.y)
 
                 colors?.set(curElement,true)
                 unit.value = curElement
@@ -189,7 +227,7 @@ class MyCustomView : View{
         }
     }
 
-    fun orientaion(bool:Boolean) { isHorizontal =bool}
+    fun orientaion(bool:Boolean) { isHorizontal = bool}
 
     private fun printLog(str:Any){
         Log.d(TAG,"$str")

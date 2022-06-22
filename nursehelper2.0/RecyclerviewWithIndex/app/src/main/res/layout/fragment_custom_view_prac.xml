@@ -9,15 +9,24 @@
    <com.nuhlp.recyclerviewwithindex.components.MyCustomView
        android:id="@+id/myCustomView"
        android:layout_width="0dp"
-       android:layout_height="120dp"
-       android:layout_marginStart="50dp"
-       android:layout_marginTop="200dp"
-       android:layout_marginEnd="50dp"
+       android:layout_height="104dp"
+       android:layout_marginTop="204dp"
        android:background="#F8E8E8"
+       app:isHorizontal="true"
        app:layout_constraintEnd_toEndOf="parent"
+       app:layout_constraintStart_toStartOf="@+id/myCustomView2"
+       app:layout_constraintTop_toTopOf="parent" />
+
+   <com.nuhlp.recyclerviewwithindex.components.MyCustomView
+       android:id="@+id/myCustomView2"
+       android:layout_width="98dp"
+       android:layout_height="235dp"
+       android:layout_marginStart="40dp"
+       android:layout_marginTop="308dp"
+       android:background="#F8E8E8"
+       app:isHorizontal="false"
        app:layout_constraintStart_toStartOf="parent"
-       app:layout_constraintTop_toTopOf="parent"
-       app:isHorizontal="false"/>
+       app:layout_constraintTop_toTopOf="parent" />
 
    <View
        android:id="@+id/rect1"
@@ -34,9 +43,10 @@
        android:id="@+id/positionText"
        android:layout_width="wrap_content"
        android:layout_height="wrap_content"
-       android:layout_marginTop="179dp"
+       android:layout_marginStart="4dp"
+       android:layout_marginTop="96dp"
        android:text="TextView"
        android:textSize="35sp"
        app:layout_constraintStart_toStartOf="@+id/myCustomView"
-       app:layout_constraintTop_toBottomOf="@+id/myCustomView" />
+       app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
