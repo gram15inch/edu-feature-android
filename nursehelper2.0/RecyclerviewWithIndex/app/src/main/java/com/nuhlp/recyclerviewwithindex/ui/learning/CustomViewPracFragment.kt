@@ -18,11 +18,11 @@ class CustomViewPracFragment :BaseViewBindingFragment<FragmentCustomViewPracBind
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.myCustomView.updateItem(createItem ((tmpN++)%3))
-        binding.myCustomView2.updateItem(createItem ((tmpN++)%3))
+        binding.myCustomView.updateItem(createItem((tmpN++)%3))
+        binding.myCustomView2.updateItem(createItem((tmpN++)%3))
         setListener()
         setObserver()
-        // todo 리클라이어뷰 속에 인덱스 넣기  ( 부모위치 기준 자식위치 계산)
+        // todo 리클라이어뷰 속에 인덱스 넣기  (부모위치 기준 자식위치 계산) 1/2
     }
 
     var tmpN = 0
