@@ -31,10 +31,13 @@
    <com.nuhlp.recyclerviewwithindex.components.MyRecyclerView
        android:id="@+id/myRcycler"
        android:layout_width="732dp"
-       android:layout_height="233dp"
+       android:layout_height="300dp"
        android:layout_marginStart="40dp"
        android:layout_marginTop="68dp"
        android:background="#C0DBE8"
+       android:paddingLeft="40dp"
+       android:paddingTop="40dp"
+       android:overScrollMode="never"
        app:layout_constraintStart_toStartOf="parent"
        app:layout_constraintTop_toBottomOf="@+id/myCustomView2" />
 
