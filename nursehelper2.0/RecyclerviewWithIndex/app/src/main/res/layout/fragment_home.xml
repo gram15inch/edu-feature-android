@@ -113,6 +113,7 @@
         android:layout_toEndOf="@id/btn3"
         android:text="move text"
         android:textSize="40dp" />
+
     <TextView
         android:id="@+id/checkText"
         android:layout_width="400dp"
@@ -122,4 +123,12 @@
         android:textSize="20dp"
 
         />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/index_recyclerView"
+        android:layout_width="700dp"
+        android:layout_height="300dp"
+        android:layout_below="@id/checkText"
+        android:background="#FFD6D6" />
+
 </RelativeLayout>

@@ -2,6 +2,7 @@ package com.nuhlp.recyclerviewwithindex.ui.home
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -19,7 +20,7 @@ import com.nuhlp.recyclerviewwithindex.adapter.ItemListAdapter
 import com.nuhlp.recyclerviewwithindex.base.BaseViewBindingFragment
 import com.nuhlp.recyclerviewwithindex.databinding.FragmentHomeBinding
 
-
+val TAG = "HomeFragmentLog"
 class HomeFragment :BaseViewBindingFragment<FragmentHomeBinding>()  {
     private val viewModel: HomeViewModel by activityViewModels { HomeViewModelFactory() }
     lateinit var _layoutManager: LinearLayoutManager
@@ -27,36 +28,50 @@ class HomeFragment :BaseViewBindingFragment<FragmentHomeBinding>()  {
     var positionXY = MutableLiveData<List<Float>>()
     var checkText = MutableLiveData<String>()
 
+    val itemListAdapter :ItemListAdapter
+    init {
+        itemListAdapter = ItemListAdapter {}
 
+    }
     @SuppressLint("ClickableViewAccessibility", "SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val adapter = ItemListAdapter {}
-        viewModel.allDocs.observe(this.viewLifecycleOwner) { items ->
-            items.let {
-                adapter.submitList(it)
-            }
-        }
+        setComponent()
+        setObserver()
+        setListener()
+
         viewModel.updateDocs(30)
 
-        binding.recyclerView.adapter = adapter
-        _layoutManager = LinearLayoutManager(this.context,LinearLayoutManager.HORIZONTAL,false)
-        binding.recyclerView.layoutManager =_layoutManager
+    }
 
+    private fun setComponent()=binding.apply {
+        _layoutManager = LinearLayoutManager(this@HomeFragment.context,LinearLayoutManager.HORIZONTAL,false)
         _layoutManager.scrollToPositionWithOffset(15,0)
+        recyclerView.layoutManager =_layoutManager
+        recyclerView.adapter = itemListAdapter
 
+
+        // ** index recycler **
+        indexRecyclerView.layoutManager = LinearLayoutManager(this@HomeFragment.context,LinearLayoutManager.HORIZONTAL,false)
+        indexRecyclerView.adapter = itemListAdapter
+    }
+
+    private fun setObserver()=binding.apply {
         positionRawXY.observe(viewLifecycleOwner){
-          binding.positionXYText.text = "rawX: ${it[0]} rawY: ${it[1]} \n ${it[2]} ${it[3]}"
+            binding.positionXYText.text = "rawX: ${it[0]} rawY: ${it[1]} \n ${it[2]} ${it[3]}"
             binding.eventText.x = it[0] - it[2]
             binding.eventText.y = it[1]  - 150
         }
-        checkText.observe(viewLifecycleOwner){
-            binding.checkText.text = checkText.value
+        this@HomeFragment.checkText.observe(viewLifecycleOwner){
+            checkText.text = it
         }
-
-        setListener()
-
+        viewModel.allDocs.observe(viewLifecycleOwner) { items ->
+            items.let {
+                itemListAdapter.submitList(it)
+            }
+        }
     }
+
     @SuppressLint("ClickableViewAccessibility")
     fun setListener()= binding.apply {
 
@@ -101,16 +116,16 @@ class HomeFragment :BaseViewBindingFragment<FragmentHomeBinding>()  {
             true
         }
 
-      /*  mutableIndexHorizontal.setOnTouchListener { v, event ->
-            when(event.action){
-                MotionEvent.ACTION_MOVE ->{
-                       this@HomeFragment.checkText.value = "device : ${event.device}  \n  " +
-                               "classification : ${event.classification}  \n"
-                }
-            }
-            true
-        }
-        */
+        /*  mutableIndexHorizontal.setOnTouchListener { v, event ->
+              when(event.action){
+                  MotionEvent.ACTION_MOVE ->{
+                         this@HomeFragment.checkText.value = "device : ${event.device}  \n  " +
+                                 "classification : ${event.classification}  \n"
+                  }
+              }
+              true
+          }
+          */
 
     }
     fun createIndexNum(size:Int):String{
@@ -126,4 +141,7 @@ class HomeFragment :BaseViewBindingFragment<FragmentHomeBinding>()  {
     }
 
     fun showToast(str:String) = Toast.makeText(activity,str,Toast.LENGTH_SHORT).show()
+    private fun printLog(str: Any) = Log.d(TAG, "$str")
+
+
 }
