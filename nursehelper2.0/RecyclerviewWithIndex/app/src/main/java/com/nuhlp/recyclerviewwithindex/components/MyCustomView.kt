@@ -196,15 +196,12 @@ class MyCustomView : View{
     }
 
     fun getElement(x: Float,y:Float) :Int {
-        if(isHorizontal)
-        pos_x_element.filter { it > 0 }.forEachIndexed(){ i, e->
-            if(e>=x) { // todo 순서 맞추기
-                printLog("e:$e >= x:$x (i:$i)")
-                return i}
-        }
-        else
-        pos_x_element.filter { it > 0 }.forEachIndexed(){ i, e->
-            if(e>=y) return i
+        if(isHorizontal) {
+            val a= pos_x_element.filter { it > 0 }.indexOfLast { it < x }
+            if (a!=-1) return a
+        }else{
+            val a= pos_x_element.filter { it > 0 }.indexOfLast { it < y }
+            if (a!=-1) return a
         }
       return lastElement
     }

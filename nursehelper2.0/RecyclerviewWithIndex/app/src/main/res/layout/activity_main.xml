@@ -7,7 +7,7 @@
     tools:context=".MainActivity">
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentContainerView"
-        android:name="com.nuhlp.recyclerviewwithindex.ui.learning.CustomViewPracFragment"
+        android:name="com.nuhlp.recyclerviewwithindex.ui.home.HomeFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
