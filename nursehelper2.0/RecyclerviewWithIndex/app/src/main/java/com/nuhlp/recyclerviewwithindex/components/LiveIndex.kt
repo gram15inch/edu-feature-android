@@ -16,13 +16,16 @@ class LiveIndex {
 
     val context :Context
     val recyclerView: IndexRecyclerView
-    val pickIc : Drawable
+    val pickIcH : Drawable
+    val pickIcV : Drawable
     constructor(c: Context, rView: IndexRecyclerView)
     {
         this.context = c
         this.recyclerView = rView
-        pickIc =  context.resources.getDrawable(R.drawable.ic_rpiccut, null)
+        pickIcH =  context.resources.getDrawable(R.drawable.ic_rpiccut, null)
+        pickIcV =  context.resources.getDrawable(R.drawable.ic_rpicv, null)
         marginLeft = recyclerView.paddingLeft.toFloat()
+        marginTop = recyclerView.paddingTop.toFloat()
     }
 
     var isIndex = false
@@ -39,8 +42,12 @@ class LiveIndex {
     var elementWidth2 = 25f
     var elementHeight = 19f
     var marginLeft :Float
+    var marginTop :Float
     var pickerIconWidth = 60
     var pickerIconHeight = 70
+    var pickerVIconWidth = 70
+    var pickerVIconHeight = 50
+
     var pickerIndexWidth = 24f
     var pickerIndexWidth2 = 48f
     var isHorizontal = true
@@ -64,7 +71,13 @@ class LiveIndex {
             MotionEvent.ACTION_DOWN -> {
                 val pTop = recyclerView.paddingTop.toFloat()
                 val pLeft = recyclerView.paddingLeft.toFloat()
-                if (e.y < pTop || e.x < pLeft ){
+                if(isHorizontal){
+                    if (e.y < pTop){
+                        isIndex = true
+                        return true
+                    }
+                }
+                else if (e.x < pLeft){
                     isIndex = true
                     return true
                 }
@@ -129,19 +142,18 @@ class LiveIndex {
             isAntiAlias = true
             textSize = 24f // 실제크기 : 13f
         }
-
-        var yPosElement = 0f
+        var yPosElement = marginTop //+ elementHeight
 
         var yPosPickerIcon = 0f
         var yPosPickerIndex = 0f
         var lastElementForHeight = 0
-
+        val icMarginLeft = 20
         /* 1~99 까지 커버 */
         itemList.forEachIndexed(){i,c->
-            yPosElement += elementHeight + elementGapH
-            yPosPickerIcon = yPosElement - pickerIconWidth / 2 + elementWidth2 / 2
-            yPosPickerIndex = yPosPickerIcon + (pickerIconWidth - pickerIndexWidth2) / 2
-
+            yPosElement += elementHeight + elementGapH // todo icon y 위치 맞추기
+            yPosPickerIcon = yPosElement - pickerVIconHeight / 2- elementHeight / 2
+            yPosPickerIndex = yPosPickerIcon + (pickerVIconWidth - pickerIndexWidth2) / 2
+            //printLog("p: $yPosElement i:$i")
             pos_x_element[i] = yPosElement
             pos_x_picker_icon[i] = yPosPickerIcon
             pos_x_picker_index[i] = yPosPickerIndex
@@ -153,8 +165,8 @@ class LiveIndex {
             // ** icon **
             if(colors[i])
             {   indexPaint.color =  context.resources.getColor(R.color.purple_200)
-                pickIc.setBounds(0 ,pos_x_picker_icon[i].toInt(),pickerIconWidth, pos_x_picker_icon[i].toInt()+pickerIconHeight) // 위치
-                pickIc.draw(canvas)
+                pickIcV.setBounds(icMarginLeft ,pos_x_picker_icon[i].toInt(),pickerVIconWidth+icMarginLeft, pos_x_picker_icon[i].toInt()+pickerVIconHeight) // 위치
+                pickIcV.draw(canvas)
 
                 val tp = Paint()
                 tp.color = context.resources.getColor(R.color.white)
@@ -166,7 +178,7 @@ class LiveIndex {
 
             // ** index **
             val x = 0f // index별 x위치
-            val y = pos_x_picker_index[i]
+            val y = pos_x_element[i]
             drawText("$c", x, y ,indexPaint)
         }
     }
@@ -212,8 +224,8 @@ class LiveIndex {
             // ** icon **
             if(colors[i])
             {   indexPaint.color = context.resources.getColor(R.color.purple_200)
-                pickIc.setBounds(pos_x_picker_icon[i].toInt() ,0,pos_x_picker_icon[i].toInt()+pickerIconWidth, pickerIconHeight) // 위치
-                pickIc.draw(canvas)
+                pickIcH.setBounds(pos_x_picker_icon[i].toInt() ,0,pos_x_picker_icon[i].toInt()+pickerIconWidth, pickerIconHeight) // 위치
+                pickIcH.draw(canvas)
 
                 val tp = Paint()
                 tp.color = context.resources.getColor(R.color.white)
@@ -233,12 +245,14 @@ class LiveIndex {
 
 
     fun getElement(x: Float,y:Float) :Int {
+
         if(isHorizontal) {
             val a= pos_x_element.filter { it > 0 }.indexOfLast { it < x }
             if (a!=-1) return a
         }else{
-            val a= pos_x_element.filter { it > 0 }.indexOfLast { it < y }
+            val a= pos_x_element.filter { it > 0 }.indexOfLast { it-elementHeight-elementGapV < y }
             if (a!=-1) return a
+
         }
         return lastElement
     }

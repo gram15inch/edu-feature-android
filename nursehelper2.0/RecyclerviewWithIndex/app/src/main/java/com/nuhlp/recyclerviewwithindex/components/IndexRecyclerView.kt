@@ -16,9 +16,9 @@ class IndexRecyclerView  @JvmOverloads constructor(
     private val liveIndexV = LiveIndex(context,this)
 
     init{
+        liveIndexV.isHorizontal = false
         liveIndexH.updateItem(createItem(3))
         liveIndexV.updateItem(createItem(1))
-        liveIndexV.isHorizontal = false
     }
 
     /*
@@ -57,7 +57,7 @@ class IndexRecyclerView  @JvmOverloads constructor(
         super.draw(c)
         liveIndexH.onDraw(c)
         liveIndexV.onDraw(c)
-        //todo 아이콘 제대로 수평에 표시
+        //todo 아이콘 제대로 수직에 표시
     }
     private fun printLog(str: Any) {
         Log.d(TAG, "$str")
