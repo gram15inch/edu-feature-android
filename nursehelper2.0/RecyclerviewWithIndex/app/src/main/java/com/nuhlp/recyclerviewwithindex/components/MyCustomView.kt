@@ -35,7 +35,7 @@ class MyCustomView : View{
     var elementHeight = 19f
     var marginLeft = 15f
     var pickerIconWidth = 60
-    var pickerIconHeight = 90
+    var pickerIconHeight = 70
     var pickerIndexWidth = 24f
     var pickerIndexWidth2 = 48f
     var isHorizontal = true
@@ -158,6 +158,7 @@ class MyCustomView : View{
                 xPosPickerIcon = xPosElement - pickerIconWidth / 2 + elementWidth2 / 2
                 xPosPickerIndex = xPosPickerIcon + (pickerIconWidth - pickerIndexWidth2) / 2
             }
+            //printLog("$i: $xPosElement")
             pos_x_element[i] = xPosElement
             pos_x_picker_icon[i] = xPosPickerIcon
             pos_x_picker_index[i] = xPosPickerIndex
@@ -184,7 +185,7 @@ class MyCustomView : View{
             // ** index **
             val x = pos_x_element[i] // index별 x위치
             val y = pY
-            drawText("$c", x, y ,indexPaint)
+            drawText("$c", x, 80f ,indexPaint)
         }
 
     }
@@ -197,11 +198,13 @@ class MyCustomView : View{
     fun getElement(x: Float,y:Float) :Int {
         if(isHorizontal)
         pos_x_element.filter { it > 0 }.forEachIndexed(){ i, e->
-            if(e>x) return i
+            if(e>=x) { // todo 순서 맞추기
+                printLog("e:$e >= x:$x (i:$i)")
+                return i}
         }
         else
         pos_x_element.filter { it > 0 }.forEachIndexed(){ i, e->
-            if(e>y) return i
+            if(e>=y) return i
         }
       return lastElement
     }

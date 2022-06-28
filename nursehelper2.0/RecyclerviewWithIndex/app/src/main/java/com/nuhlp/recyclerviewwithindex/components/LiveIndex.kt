@@ -2,13 +2,18 @@ package com.nuhlp.recyclerviewwithindex.components
 
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.RectF
 import android.util.Log
 import android.view.MotionEvent
 
 class LiveIndex {
+    val TAG = "LiveIndex"
     var isIndex = false
     val context :Context
     val recyclerView: IndexRecyclerView
+
     constructor(c: Context, rView: IndexRecyclerView)
     {
         this.context = c
@@ -18,8 +23,13 @@ class LiveIndex {
     fun onTouchEvent(e: MotionEvent?): Boolean {
         when (e?.action) {
             MotionEvent.ACTION_DOWN -> {
-                if (e.y < 70f)
+                val pTop = recyclerView.paddingTop.toFloat()
+                val pLeft = recyclerView.paddingLeft.toFloat()
+                if (e.y < pTop || e.x < pLeft ){
                     isIndex = true
+                    return true
+                }
+
             }
             MotionEvent.ACTION_MOVE -> {
                 if (isIndex) {
@@ -27,7 +37,10 @@ class LiveIndex {
                 }
             }
             MotionEvent.ACTION_UP -> {
-                isIndex = false
+                if (isIndex) {
+                    isIndex = false
+                    return true
+                }
             }
         }
 
@@ -35,6 +48,19 @@ class LiveIndex {
     }
 
     fun onDraw(canvas:Canvas?){
-        // todo 터치 분리 / 색상 분리
+        val pTop = recyclerView.paddingTop.toFloat()
+        val pLeft = recyclerView.paddingLeft.toFloat()
+        val rWidth = recyclerView.width.toFloat()
+        val rHeight = recyclerView.height.toFloat()
+        val hr = RectF(0f,0f,rWidth,pTop)
+        val vr = RectF(0f,0f,pLeft,rHeight)
+        val p = Paint()
+        p.color= Color.BLUE
+        p.alpha = 30
+        canvas!!.drawRect(hr,p)
+        canvas!!.drawRect(vr,p)
+    }
+    private fun printLog(str: Any) {
+        Log.d(TAG, "$str")
     }
 }
