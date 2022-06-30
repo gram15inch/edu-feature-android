@@ -311,4 +311,6 @@ class LiveIndex {
         printLog("textWidth: $textWidth")
         printLog("textHeight: $textHeight")
     }
+
+
 }

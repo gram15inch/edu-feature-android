@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView.SmoothScroller
 import com.nuhlp.recyclerviewwithindex.R
 import com.nuhlp.recyclerviewwithindex.adapter.ItemListAdapter
 import com.nuhlp.recyclerviewwithindex.base.BaseViewBindingFragment
+import com.nuhlp.recyclerviewwithindex.base.MarginItemDecoration
 import com.nuhlp.recyclerviewwithindex.databinding.FragmentHomeBinding
 
 val TAG = "HomeFragmentLog"
@@ -55,6 +56,8 @@ class HomeFragment :BaseViewBindingFragment<FragmentHomeBinding>()  {
         // ** index recycler **
         indexRecyclerView.layoutManager = LinearLayoutManager(this@HomeFragment.context,LinearLayoutManager.HORIZONTAL,false)
         indexRecyclerView.adapter = itemListAdapter
+        val mid=MarginItemDecoration(5)
+        indexRecyclerView.addItemDecoration(mid)
     }
 
     private fun setObserver()=binding.apply {

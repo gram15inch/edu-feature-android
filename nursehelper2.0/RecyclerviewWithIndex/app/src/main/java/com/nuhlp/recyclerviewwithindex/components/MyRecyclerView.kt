@@ -4,9 +4,11 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
+import android.graphics.Rect
 import android.util.AttributeSet
 import android.util.Log
 import android.view.MotionEvent
+import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.nuhlp.recyclerviewwithindex.R
 
@@ -15,7 +17,7 @@ class MyRecyclerView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null
 ) : RecyclerView(context, attrs) {
     var isIndex = false
-    override fun draw(c: Canvas?) {
+    override fun draw(c: Canvas?)  {
         super.draw(c)
 
         val p = Paint().apply {
@@ -54,4 +56,5 @@ class MyRecyclerView @JvmOverloads constructor(
         }
         return  super.onTouchEvent(event)
     }
+
 }

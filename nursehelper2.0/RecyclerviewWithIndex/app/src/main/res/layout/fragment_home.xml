@@ -132,11 +132,12 @@
         android:layout_marginHorizontal="20dp"
         android:layout_marginTop="-2dp"
         android:background="#FFD6D6"
-        android:elevation="10dp"
-        android:overScrollMode="never"
+        android:elevation="3dp"
         android:paddingStart="60dp"
         android:paddingTop="60dp"
         android:paddingEnd="10dp"
+        android:paddingBottom="5dp"
+
         />
 
 </RelativeLayout>
