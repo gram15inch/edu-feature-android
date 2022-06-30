@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#EAEAEA"
     tools:context=".ui.home.HomeFragment">
 
     <!-- TODO: Update blank fragment layout -->
@@ -131,10 +130,13 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/checkText"
         android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="-2dp"
         android:background="#FFD6D6"
+        android:elevation="10dp"
         android:overScrollMode="never"
-        android:paddingLeft="60dp"
+        android:paddingStart="60dp"
         android:paddingTop="60dp"
-        android:paddingRight="10dp" />
+        android:paddingEnd="10dp"
+        />
 
 </RelativeLayout>

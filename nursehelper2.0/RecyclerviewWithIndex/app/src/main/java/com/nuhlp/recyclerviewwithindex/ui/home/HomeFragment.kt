@@ -39,7 +39,8 @@ class HomeFragment :BaseViewBindingFragment<FragmentHomeBinding>()  {
         setComponent()
         setObserver()
         setListener()
-
+        //todo 어답터 그림자 가려지는문제 수정
+        //todo 리클라이어뷰 어답터 위치이동 패딩이외 방법 찾기
         viewModel.updateDocs(30)
 
     }

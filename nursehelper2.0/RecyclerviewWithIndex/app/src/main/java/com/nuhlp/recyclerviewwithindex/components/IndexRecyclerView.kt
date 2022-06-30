@@ -2,7 +2,6 @@ package com.nuhlp.recyclerviewwithindex.components
 
 import android.content.Context
 import android.graphics.Canvas
-import android.graphics.Color
 import android.util.AttributeSet
 import android.util.Log
 import android.view.MotionEvent
@@ -18,9 +17,9 @@ class IndexRecyclerView  @JvmOverloads constructor(
 
     init{
         liveIndexV.isHorizontal = false
-        liveIndexH.updateItem(createItem(3))
-        liveIndexV.updateItem(createItem(1))
-        background = context.resources.getDrawable(R.drawable.bg_rect_round_section)
+        liveIndexH.updateItem(createItem(30))
+        liveIndexV.updateItem(createItem(12))
+        background = context.resources.getDrawable(R.drawable.bg_rect_round_2)
     }
 
     /*
@@ -78,8 +77,16 @@ class IndexRecyclerView  @JvmOverloads constructor(
                     if(i%3 == 0)
                         list.add(i)
             }
-            else->{
+            12->{
+                for(i in 1..12)
+                    list.add(i)
+            }
+            30->{
                 for(i in 1..30)
+                    list.add(i)
+            }
+            else->{
+                for(i in 1..1)
                     list.add(i)
             }
 
