@@ -7,6 +7,7 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.MotionEvent
 import androidx.recyclerview.widget.RecyclerView
+import com.nuhlp.recyclerviewwithindex.R
 
 class IndexRecyclerView  @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null,
@@ -19,6 +20,7 @@ class IndexRecyclerView  @JvmOverloads constructor(
         liveIndexV.isHorizontal = false
         liveIndexH.updateItem(createItem(3))
         liveIndexV.updateItem(createItem(1))
+        background = context.resources.getDrawable(R.drawable.bg_rect_round_section)
     }
 
     /*

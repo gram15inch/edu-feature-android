@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#EAEAEA"
     tools:context=".ui.home.HomeFragment">
 
     <!-- TODO: Update blank fragment layout -->
@@ -18,10 +19,10 @@
 
     <include
         android:id="@+id/blank"
+        layout="@layout/index_horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/title"
-        layout="@layout/index_horizontal"/>
+        android:layout_below="@id/title" />
 
 
     <TextView
@@ -126,12 +127,14 @@
 
     <com.nuhlp.recyclerviewwithindex.components.IndexRecyclerView
         android:id="@+id/index_recyclerView"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/checkText"
+        android:layout_marginHorizontal="20dp"
         android:background="#FFD6D6"
         android:overScrollMode="never"
         android:paddingLeft="60dp"
-        android:paddingTop="60dp" />
+        android:paddingTop="60dp"
+        android:paddingRight="10dp" />
 
 </RelativeLayout>
