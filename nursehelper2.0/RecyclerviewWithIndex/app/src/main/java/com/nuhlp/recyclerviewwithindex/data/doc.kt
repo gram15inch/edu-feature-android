@@ -14,11 +14,15 @@ data class doc(
     val docContents: String,
 ){
     companion object{
-        fun getStub(size: Int): List<doc>{
+        fun getStub(m: Int,mode: Int): List<doc>{
             val docs = mutableListOf<doc>()
-            for(r in 1..size){
-                docs.add(doc("title$r","content$r"))
+            for(d in 1..30) {
+                if (d % mode == 0)
+                    docs.add(doc("title$d", "content \r\n$m/$d"))
             }
+
+
+
             return docs
         }
     }

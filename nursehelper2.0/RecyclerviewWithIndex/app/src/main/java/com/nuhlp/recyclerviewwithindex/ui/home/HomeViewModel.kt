@@ -9,8 +9,8 @@ class HomeViewModel : ViewModel(){
     val allDocs: MutableLiveData<List<doc>> = MutableLiveData()
 
 
-    fun updateDocs(size:Int){
-         allDocs.value = doc.getStub(size)
+    fun updateDocs(month:Int){
+         allDocs.value = doc.getStub(month,2)
     }
 
 

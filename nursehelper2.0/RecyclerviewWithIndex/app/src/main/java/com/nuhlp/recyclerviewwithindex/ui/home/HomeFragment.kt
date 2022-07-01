@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.SmoothScroller
+import androidx.recyclerview.widget.SimpleItemAnimator
 import com.nuhlp.recyclerviewwithindex.R
 import com.nuhlp.recyclerviewwithindex.adapter.ItemListAdapter
 import com.nuhlp.recyclerviewwithindex.base.BaseViewBindingFragment
@@ -32,7 +33,6 @@ class HomeFragment :BaseViewBindingFragment<FragmentHomeBinding>()  {
     val itemListAdapter :ItemListAdapter
     init {
         itemListAdapter = ItemListAdapter {}
-
     }
     @SuppressLint("ClickableViewAccessibility", "SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -40,10 +40,7 @@ class HomeFragment :BaseViewBindingFragment<FragmentHomeBinding>()  {
         setComponent()
         setObserver()
         setListener()
-        //todo 어답터 그림자 가려지는문제 수정
-        //todo 리클라이어뷰 어답터 위치이동 패딩이외 방법 찾기
-        viewModel.updateDocs(30)
-
+        viewModel.updateDocs(1)
     }
 
     private fun setComponent()=binding.apply {
@@ -51,13 +48,14 @@ class HomeFragment :BaseViewBindingFragment<FragmentHomeBinding>()  {
         _layoutManager.scrollToPositionWithOffset(15,0)
         recyclerView.layoutManager =_layoutManager
         recyclerView.adapter = itemListAdapter
-
+        recyclerView.itemAnimator = null
 
         // ** index recycler **
         indexRecyclerView.layoutManager = LinearLayoutManager(this@HomeFragment.context,LinearLayoutManager.HORIZONTAL,false)
         indexRecyclerView.adapter = itemListAdapter
         val mid=MarginItemDecoration(5)
         indexRecyclerView.addItemDecoration(mid)
+        indexRecyclerView.itemAnimator = null
     }
 
     private fun setObserver()=binding.apply {
@@ -73,6 +71,12 @@ class HomeFragment :BaseViewBindingFragment<FragmentHomeBinding>()  {
             items.let {
                 itemListAdapter.submitList(it)
             }
+        }
+        indexRecyclerView.getLiveData(true).observe(viewLifecycleOwner){
+            (indexRecyclerView.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(it,0)
+        }
+        indexRecyclerView.getLiveData(false).observe(viewLifecycleOwner){
+            viewModel.updateDocs(it)
         }
     }
 

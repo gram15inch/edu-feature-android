@@ -27,17 +27,17 @@ class MyCustomView : View{
     var unit  = MutableLiveData<Int>()
     val pickIc = resources.getDrawable(R.drawable.ic_rpiccut, null)
 
-    var lastElement = 0
-    var elementGapH = 10f
-    var elementGapV = 10f
-    var elementWidth = 13f
-    var elementWidth2 = 25f
-    var elementHeight = 19f
-    var marginLeft = 15f
-    var pickerIconWidth = 60
-    var pickerIconHeight = 70
-    var pickerIndexWidth = 24f
-    var pickerIndexWidth2 = 48f
+    private var lastElement = 0
+    private var elementGapH = 10f
+    private var elementGapV = 10f
+    private var elementWidth = 13f
+    private var elementWidth2 = 25f
+    private var elementHeight = 19f
+    private var marginLeft = 15f
+    private var pickerIconWidth = 60
+    private var pickerIconHeight = 70
+    private var pickerIndexWidth = 24f
+    private var pickerIndexWidth2 = 48f
     var isHorizontal = true
     private var itemList = listOf<Int>()
 

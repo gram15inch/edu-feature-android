@@ -14,7 +14,7 @@ class ItemListAdapter (private val onItemClicked: (doc) -> Unit) :
     companion object {
         private val DiffCallback = object : DiffUtil.ItemCallback<doc>() {
             override fun areItemsTheSame(oldDoc: doc, newDoc: doc): Boolean {
-                return oldDoc === newDoc
+                return oldDoc == newDoc
             }
 
             override fun areContentsTheSame(oldDoc: doc, newDoc: doc): Boolean {

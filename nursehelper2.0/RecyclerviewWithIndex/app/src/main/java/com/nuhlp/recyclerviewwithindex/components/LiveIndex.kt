@@ -9,12 +9,19 @@ import androidx.lifecycle.MutableLiveData
 import com.nuhlp.recyclerviewwithindex.R
 
 class LiveIndex {
-    val TAG = "LiveIndex"
-
+    // * constructor *
     val context :Context
     val recyclerView: IndexRecyclerView
+
+    // * parent *
+    var parentPaddingLeft :Float
+    var parentPaddingTop :Float
+
+    // * resource *
+    val TAG = "LiveIndex"
     val pickIcH : Drawable
     val pickIcV : Drawable
+
     constructor(c: Context, rView: IndexRecyclerView)
     {
         this.context = c
@@ -24,42 +31,40 @@ class LiveIndex {
         parentPaddingLeft = recyclerView.paddingLeft.toFloat()
         parentPaddingTop = recyclerView.paddingTop.toFloat()
     }
+    //todo 실제 문서를 리스트로 리클라이어뷰 업데이트 (인덱스,어답터 동기화)
+    //todo 한글 인덱스 리클라이어뷰 생성
 
+
+    // * state *
     var isIndex = false
-    var pX = 45f
-    var pY = 120f
-
-    var unit  = MutableLiveData<Int>()
-    var parentPaddingLeft :Float
-    var parentPaddingTop :Float
-
-    // * layout *
-    var marginTop = 30f
-    var marginLeft = 20f
-
-    // * element *
+    var isHorizontal = true
     var lastElement = 0
+    var unit  = MutableLiveData<Int>()
+    var itemList = listOf<Int>()
+    lateinit var colors :Array<Boolean>
+
+    // * element size *
     var elementGapH = 10f
     var elementGapV = 10f
     var elementWidth = 13f
     var elementWidth2 = 25f
     var elementHeight = 19f
 
-    // * picker icon *
+    // * picker icon size *
     var pickerIconWidth = 60
     var pickerIconHeight = 70
     var pickerVIconWidth = 70
     var pickerVIconHeight = 50
 
-    // * picker index *
+    // * picker index size *
     var pickerIndexWidth = 24f
     var pickerIndexWidth2 = 48f
     var pickerIndexHeight = 34f
 
-    var isHorizontal = true
-    private var itemList = listOf<Int>()
+    // * layout *
+    var marginTop = 30f
+    var marginLeft = 20f
 
-    private lateinit var colors :Array<Boolean>
     private lateinit var pos_x_element :Array<Float>
     private lateinit var pos_x_picker_index :Array<Float>
     private lateinit var pos_x_picker_icon :Array<Float>
@@ -67,7 +72,6 @@ class LiveIndex {
     private lateinit var pos_y_element :Array<Float>
     private lateinit var pos_y_picker_index :Array<Float>
     private lateinit var pos_y_picker_icon :Array<Float>
-
 
     private fun arrayInit(){
         colors = Array(50) {false}
@@ -101,9 +105,9 @@ class LiveIndex {
                 if (isIndex) {
                     colors?.set(lastElement,false)
                     val curElement = getElement(e.x,e.y)
-
                     colors?.set(curElement,true)
-                    unit.value = curElement
+                    if(isHorizontal)
+                        unit.value = curElement // ** index 접근
                     lastElement = curElement
 
 
@@ -115,6 +119,7 @@ class LiveIndex {
                     isIndex = false
 
                     colors?.set(lastElement,false)
+                    unit.value = itemList[lastElement] // ** value 접근
                     return true
                 }
             }
@@ -124,17 +129,6 @@ class LiveIndex {
     }
 
     fun onDraw(canvas:Canvas?){
-       /* val pTop = recyclerView.paddingTop.toFloat()
-        val pLeft = recyclerView.paddingLeft.toFloat()
-        val rWidth = recyclerView.width.toFloat()
-        val rHeight = recyclerView.height.toFloat()
-        val hr = RectF(0f,0f,rWidth,pTop)
-        val vr = RectF(0f,0f,pLeft,rHeight)
-        val p = Paint()
-        p.color= Color.BLUE
-        p.alpha = 30
-        canvas!!.drawRect(hr,p)
-        canvas!!.drawRect(vr,p)*/
 
         if(isHorizontal)
             drawHorizontal(canvas)
@@ -184,7 +178,6 @@ class LiveIndex {
 
             lastElementForHeight = c
         }
-        textSize("0",45f)
         // *** 마커 ***
         itemList.forEachIndexed() {i,c->
 
@@ -272,10 +265,9 @@ class LiveIndex {
 
             // ** element **
             val x = pos_x_element[i] // index별 x위치
-            val y = pY
-            drawText("$c", x, 80f ,indexPaint)
+            val y = 80f
+            drawText("$c", x, y ,indexPaint)
         }
-
     }
 
 
@@ -283,12 +275,13 @@ class LiveIndex {
 
         if(isHorizontal) {
             val a= pos_x_element.filter { it > 0 }.indexOfLast { it < x }
+            printLog(a)
             if (a!=-1) return a
         }else{
             val a= pos_y_element.filter { it > 0 }.indexOfLast { it-elementHeight-elementGapV < y }
             if (a!=-1) return a
-
         }
+
         return lastElement
     }
 

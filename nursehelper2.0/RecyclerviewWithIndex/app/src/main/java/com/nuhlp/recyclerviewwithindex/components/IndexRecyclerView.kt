@@ -5,6 +5,8 @@ import android.graphics.Canvas
 import android.util.AttributeSet
 import android.util.Log
 import android.view.MotionEvent
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.nuhlp.recyclerviewwithindex.R
 
@@ -17,34 +19,13 @@ class IndexRecyclerView  @JvmOverloads constructor(
 
     init{
         liveIndexV.isHorizontal = false
-        liveIndexH.updateItem(createItem(30))
-        liveIndexV.updateItem(createItem(12))
+        liveIndexH.updateItem(createItem(1))
+        liveIndexV.updateItem(createItem(121))
         background = context.resources.getDrawable(R.drawable.bg_rect_round_2)
     }
 
-    /*
-    init {
-        if (attrs != null) {
-            val typedArray =
-                context.obtainStyledAttributes(attrs,
-                    androidx.viewpager2.R.styleable.RecyclerView,
-                    0,
-                    0)
-            if (typedArray != null) {
-                try {
-                    setIndexTextSize =
-                        typedArray.getInt(R.styleable.IndexFastScrollRecyclerView_setIndexTextSize,
-                            setIndexTextSize)
-                    mIndexbarWidth =
-                        typedArray.getFloat(R.styleable.IndexFastScrollRecyclerView_setIndexbarWidth,
-                            mIndexbarWidth)
-                } finally {
-                    typedArray.recycle()
-                }
-            }
-        }
-    }
-   */
+    // * state *
+
     override fun onTouchEvent(e: MotionEvent?): Boolean {
        if(liveIndexH.onTouchEvent(e)||liveIndexV.onTouchEvent(e)){
            invalidate()
@@ -58,8 +39,20 @@ class IndexRecyclerView  @JvmOverloads constructor(
         super.draw(c)
         liveIndexH.onDraw(c)
         liveIndexV.onDraw(c)
-        //todo 아이콘 제대로 수직에 표시
     }
+
+    fun getLiveData(isHorizontal:Boolean):LiveData<Int>{
+        return if(isHorizontal)
+            liveIndexH.unit
+        else
+            liveIndexV.unit
+    }
+
+
+    private fun updateAdapterPosition(pos :Int){
+
+    }
+
     private fun printLog(str: Any) {
         Log.d(TAG, "$str")
     }
@@ -84,6 +77,11 @@ class IndexRecyclerView  @JvmOverloads constructor(
             30->{
                 for(i in 1..30)
                     list.add(i)
+            }
+            121->{
+                for(i in 1..12)
+                    if(i%2 == 0)
+                        list.add(i)
             }
             else->{
                 for(i in 1..1)
