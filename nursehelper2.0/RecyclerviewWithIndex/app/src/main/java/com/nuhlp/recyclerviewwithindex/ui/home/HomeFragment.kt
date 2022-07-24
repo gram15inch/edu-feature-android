@@ -41,6 +41,7 @@ class HomeFragment :BaseViewBindingFragment<FragmentHomeBinding>()  {
         setObserver()
         setListener()
         viewModel.updateDocs(1)
+        //todo 사용법 확인
     }
 
     private fun setComponent()=binding.apply {
@@ -82,7 +83,6 @@ class HomeFragment :BaseViewBindingFragment<FragmentHomeBinding>()  {
 
     @SuppressLint("ClickableViewAccessibility")
     fun setListener()= binding.apply {
-
         val smoothScroller = object : LinearSmoothScroller(context) {
             override fun getHorizontalSnapPreference(): Int {
                 return SNAP_TO_START

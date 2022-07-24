@@ -1,18 +1,13 @@
-package com.nuhlp.recyclerviewwithindex.components
+package com.nuhlp.recyclerviewwithindex.ui.learning
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.view.children
-import androidx.core.view.isInvisible
-import androidx.databinding.adapters.ViewGroupBindingAdapter.setListener
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.nuhlp.recyclerviewwithindex.R
 import com.nuhlp.recyclerviewwithindex.databinding.IndexHorizontalBinding
 

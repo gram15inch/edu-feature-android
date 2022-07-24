@@ -1,4 +1,4 @@
-package com.nuhlp.recyclerviewwithindex.components
+package com.nuhlp.recyclerviewwithindex.ui.learning
 
 import android.annotation.SuppressLint
 import android.content.Context
