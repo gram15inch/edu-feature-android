@@ -1,21 +1,32 @@
 package com.nuhlp.googlemapapi
 
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.location.Address
+import android.location.Geocoder
 import android.os.Bundle
-
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
 import com.nuhlp.googlemapapi.databinding.ActivityMapsBinding
+import java.util.*
+
+
+/*
+* todo 1
+* */
+
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivityMapsBinding
-
+    val LATLNG = LatLng(37.566418,126.977943)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -28,21 +39,68 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mapFragment.getMapAsync(this)
     }
 
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
 
-        // Add a marker in Sydney and move the camera
-        val sydney = LatLng(-34.0, 151.0)
-        mMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+        val cameraPosition = CameraPosition.Builder()
+            .target(LATLNG)
+            .zoom(17.0f)
+            .build()
+        val cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition)
+        mMap.moveCamera(cameraUpdate)
+
+        val bitmapDrawable = bitmapDescriptorFromVector(this,R.drawable.marker)
+        val discriptor = bitmapDrawable
+        val markerOptions = MarkerOptions()
+            .position(LATLNG)
+            .icon(discriptor)
+        markerOptions.setAddress()
+        /*.title("marker in Seoul City Hall")
+            .snippet("37.566418,126.977943")*/
+        mMap.addMarker(markerOptions)
+
+
+    }
+
+    private fun bitmapDescriptorFromVector(context: Context, vectorResId: Int): BitmapDescriptor? {
+        val vectorDrawable = ContextCompat.getDrawable(context, vectorResId)
+        vectorDrawable!!.setBounds(0,
+            0,
+            vectorDrawable.intrinsicWidth,
+            vectorDrawable.intrinsicHeight)
+        val bitmap = Bitmap.createBitmap(vectorDrawable.intrinsicWidth,
+            vectorDrawable.intrinsicHeight,
+            Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        vectorDrawable.draw(canvas)
+        return BitmapDescriptorFactory.fromBitmap(bitmap)
+    }
+
+    private  fun MarkerOptions.setAddress(){
+        try {// todo 주소 클래스 분석
+            val geo =
+                Geocoder(this@MapsActivity, Locale.getDefault())
+            val addresses: List<Address> = geo.getFromLocation(LATLNG.latitude,LATLNG.longitude, 1)
+            if (addresses.isEmpty()) {
+                title("Waiting for Location")
+            } else {
+                if (addresses.size > 0) {
+                    addresses[0].apply{
+                        title("FN: $featureName" +
+                                ",LC: $locality " +
+                                ", ${this.subLocality}" +
+                                ",AA: $adminArea " +
+                                ", ${this.}" +
+                                ",CN: $countryName" +
+                                ", ${this.subLocality}" +
+                                ", ${this.subLocality}" +
+                                ", ${this.subLocality}"
+                        )
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace() // getFromLocation() may sometimes fail
+        }
     }
 }
