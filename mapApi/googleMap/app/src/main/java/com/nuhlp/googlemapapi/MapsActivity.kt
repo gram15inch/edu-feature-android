@@ -6,6 +6,7 @@ import android.graphics.Canvas
 import android.location.Address
 import android.location.Geocoder
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -27,17 +28,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivityMapsBinding
     val LATLNG = LatLng(37.566418,126.977943)
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        binding = ActivityMapsBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        val mapFragment = supportFragmentManager
-            .findFragmentById(R.id.map) as SupportMapFragment
-        mapFragment.getMapAsync(this)
-    }
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
@@ -59,6 +49,23 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             .snippet("37.566418,126.977943")*/
         mMap.addMarker(markerOptions)
 
+        // todo 서포트맵 분석하기
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        binding = ActivityMapsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        val mapFragment = supportFragmentManager
+            .findFragmentById(R.id.map) as SupportMapFragment
+        mapFragment.getMapAsync(this)
+        mapFragment.getMapAsync(test123)
+    }
+
+    val test123 = OnMapReadyCallback{
 
     }
 
@@ -86,16 +93,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             } else {
                 if (addresses.size > 0) {
                     addresses[0].apply{
-                        title("FN: $featureName" +
-                                ",LC: $locality " +
-                                ", ${this.subLocality}" +
-                                ",AA: $adminArea " +
-                                ", ${this.}" +
-                                ",CN: $countryName" +
-                                ", ${this.subLocality}" +
-                                ", ${this.subLocality}" +
-                                ", ${this.subLocality}"
-                        )
+                        title(this.getAddressLine(0))
+                            Log.d("MapsActivity","0: ${this.getAddressLine(0)} \n")
                     }
                 }
             }
