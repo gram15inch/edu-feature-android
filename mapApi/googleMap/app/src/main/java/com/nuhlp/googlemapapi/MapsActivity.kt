@@ -49,7 +49,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             .snippet("37.566418,126.977943")*/
         mMap.addMarker(markerOptions)
 
-        // todo 서포트맵 분석하기
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
