@@ -16,11 +16,13 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.nuhlp.googlemapapi.databinding.ActivityMapsBinding
 import java.util.*
+import java.util.jar.Manifest
 
 
 /*
 * todo 1
 * */
+
 
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -48,6 +50,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         /*.title("marker in Seoul City Hall")
             .snippet("37.566418,126.977943")*/
         mMap.addMarker(markerOptions)
+        // TODO MAP 공시문서 학습
 
 
     }
@@ -102,4 +105,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             e.printStackTrace() // getFromLocation() may sometimes fail
         }
     }
+}
+fun asd(){
+
 }
