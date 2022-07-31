@@ -10,7 +10,6 @@ import android.location.Geocoder
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.result.ActivityResultCallback
-import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -20,6 +19,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.nuhlp.googlemapapi.databinding.ActivityMapsBinding
+import com.nuhlp.googlemapapi.util.PermissionPolicy
 import java.util.*
 
 
@@ -30,28 +30,19 @@ import java.util.*
 
 
 
-class MapsActivity : AppCompatActivity(), OnMapReadyCallback, ActivityResultCallback<Boolean> {
+class MapsActivity : AppCompatActivity(), OnMapReadyCallback, ActivityResultCallback<Boolean>  {
 
     private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivityMapsBinding
     val LATLNG = LatLng(37.566418,126.977943)
-    val checkPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-    val test1 : (Boolean)-> Unit = { b: Boolean ->  }
+       // Manifest.permission.ACCESS_COARSE_LOCATION)
 
-    val requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission(), this)
 
-    // todo result activity 문서 부터 학습
-
-    private fun rejectPermission() {
-        TODO("Not yet implemented")
-    }
-
-    private fun grantPermission() {
-        TODO("Not yet implemented")
-    }
-
-    override fun onActivityResult(result: Boolean?) {
-        TODO("Not yet implemented")
+    override fun onActivityResult(isGranted: Boolean) {
+        if (isGranted)
+            PermissionPolicy.defaultGrant()
+        else
+            PermissionPolicy.defaultReject()
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -84,31 +75,16 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, ActivityResultCall
         binding = ActivityMapsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        checkPermission()
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
         mapFragment.getMapAsync(test123)
 
-
-        when {
-            checkPermission == PackageManager.PERMISSION_GRANTED -> {
-                grantPermission()
-            }
-            shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION) -> {
-                ration(Manifest.permission.ACCESS_COARSE_LOCATION)
-            }
-            else -> {
-                requestPermissionLauncher.launch(Manifest.permission.ACCESS_COARSE_LOCATION)
-            }
-        }
-
     }
 
-
-    private fun ration(permission: String) {
-
-    }
 
     val test123 = OnMapReadyCallback{
 
@@ -147,7 +123,22 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, ActivityResultCall
             e.printStackTrace() // getFromLocation() may sometimes fail
         }
     }
-}
-fun asd(){
 
+    private fun checkPermission(){
+        val checkPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+        val requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission(),this)
+
+        when {
+            checkPermission == PackageManager.PERMISSION_GRANTED -> {
+                PermissionPolicy.defaultGrant()
+            }
+            shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION) -> {
+                PermissionPolicy.ration(Manifest.permission.ACCESS_COARSE_LOCATION)
+                //todo 근거 호출해보기 
+            }
+            else -> {
+                requestPermissionLauncher.launch(Manifest.permission.ACCESS_COARSE_LOCATION)
+            }
+        }
+    }
 }
