@@ -15,7 +15,6 @@ object PermissionPolicy  {
         Manifest.permission.ACCESS_COARSE_LOCATION,
         Manifest.permission.ACCESS_FINE_LOCATION)
 
-
     fun defaultReject(message: String="") {
         Log.d(tag,"call rejectPermission! : $message")
 
