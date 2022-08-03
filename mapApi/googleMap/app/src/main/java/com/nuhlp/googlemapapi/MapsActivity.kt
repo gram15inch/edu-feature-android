@@ -53,20 +53,21 @@ import java.util.*
     2-2. Callback  -> (Map<String,Boolean>) -> Unit 타입으로 만든후 권한별 승인여부 확인후 개별처리하는 로직 생성
 
  ** 8/1 **
-  1. 위치 요청(매번 권한확인코드 작성 필요) -> 통합위치정보 제공자 클라이언트 필요(FusedLocationProviderClient)
-  2. 위 클라이언트로 마지막 알려진 위치 요청 -> 통제자 위치업데이트 필요
-    2-1. 통제자 -> 구글 play 서비스에서 공통적으로 사용하는 위치 API (구글 play api 를 사용하는 앱끼리 위치정보를 공유::자원절약)
-  3. 위치 업데이트 요청 -> 기기에 위치설정(gps 등..) 확인 필요
-  4. 위치설정 확인 요청 ->  SettingsClient, Task<LocationSettingsResponse> 필요
-    4-1. SettingsClient -> 위치를 제공해주는 통제자를 앱과 연결함 todo 확인필요
-    4-2. Task<LocationSettingsResponse> ->  SC.checkLocationSettings 로 생성 (파라미터에 넣을 LocationSettingsRequest, LocationRequest 필요)
-        4-2-1. LocationRequest -> 통제자에게 위치를 바로 요청하지 않고 요청서(간격/정확도/전력)을 만들어 설정후 요청서를토대로 받음
-            4-2-1-1. LocationRequest -> .create() 메서드로 인스턴스화 후 설정값 초기화
-               * interval = 10000  (기본 업데이트 간격)
-               * fastestInterval = 5000 (앱이 사용할 수 있는 가장빠른 간격)
-               * priority = LocationRequest.PRIORITY_HIGH_ACCURACY (정확도/전력소비량) :: 앱의 권한 정확도와 설정의 간격들의 조합
+  1. 위치 요청(권한승인후) -> 통합위치정보 제공자 클라이언트 필요(FusedLocationProviderClient)
+  2. 위 클라이언트로 마지막 알려진 위치 요청 -> 통제자 위치업데이트 필요 (일정한 간격을 설정해서 업데이트 받는식으로 위치를 받음)
+    2-1. 통제자 -> 구글 play 서비스에서 공통적으로 사용하는 위치 API (구글 play api 를 사용하는 앱끼리 최신위치정보를 공유::자원절약)
+  3. 위치 업데이트 요청 -> 기기에 시스템설정(gps 등..) 확인 필요
+  4. 시스템설정 확인 요청 ->  SettingsClient, Task<LocationSettingsResponse> 필요
+    4-1. SettingsClient -> 시스템설정을 변경할수있는 접근자로 앱과 연결해 사용 todo 확인필요
+    4-2. Task<LocationSettingsResponse> -> 시스템설정 확인 결과로 확인여부에 따라 실행할수있는 다른 리스너#[5]를 붙여 사용
+        * SC.checkLocationSettings 로 생성 (파라미터에 넣을 LocationSettingsRequest, LocationRequest 필요)
+        4-2-1. LocationRequest -> 위치를 특정하는데 필요한 요청서(간격/정확도/전력)
+            * .create() 메서드로 인스턴스화 후 설정값 초기화
+               - interval = 10000  (기본 업데이트 간격)
+               - fastestInterval = 5000 (앱이 사용할 수 있는 가장빠른 간격)
+               - priority = LocationRequest.PRIORITY_HIGH_ACCURACY (정확도/전력소비량) :: 앱의 권한 정확도와 설정의 간격들의 조합
         4-2-2. LocationSettingsRequest -> 하나이상의 LocationRequest 의 추가 필요 .addLocationRequest(locationRequest)로 추가
-            4-2-2-1. .Builder() 메서드로 인스턴스화 후 추가 (후에 파라미터로 넣을때 .build() 사용)
+            * .Builder() 메서드로 인스턴스화 후 추가 (후에 파라미터로 넣을때 .build() 사용)
     4-3. Task 로 결과 확인
   5. Task 로 결과처리 리스너 연결 (성공/addOnSuccessListener, 실패/addOnFailureListener)
     5-1. 성공 -> 여기부터 현재위치 접근 가능
@@ -97,7 +98,6 @@ class MapsActivity : AppCompatActivity(),
     private lateinit var locationRequest: LocationRequest
 
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMapsBinding.inflate(layoutInflater)
@@ -122,10 +122,11 @@ class MapsActivity : AppCompatActivity(),
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         }
         setCamera(LATLNG_DONGBAEK)
+
         locationSettingRequest()
         updateLocation()
         showGps(mMap)
-        // todo 여기부터 
+        // todo 여기부터 책
         mMap.setOnMyLocationButtonClickListener(this)
         mMap.setOnMyLocationClickListener(this)
     }
@@ -159,7 +160,7 @@ class MapsActivity : AppCompatActivity(),
     }
     private fun setCamera(latLng: LatLng) {
         val cameraPosition = CameraPosition.Builder()
-            .target(LATLNG_DONGBAEK)
+            .target(latLng)
             .zoom(20.0f)
             .build()
         val cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition)
