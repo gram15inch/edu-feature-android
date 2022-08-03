@@ -52,11 +52,11 @@ import java.util.*
     2-1. Contracts -> ActivityResultContracts.RequestMultiplePermissions()
     2-2. Callback  -> (Map<String,Boolean>) -> Unit 타입으로 만든후 권한별 승인여부 확인후 개별처리하는 로직 생성
 
- ** 8/1 **
+ ** 8/1 ~ 8/2 **
   1. 위치 요청(권한승인후) -> 통합위치정보 제공자 클라이언트 필요(FusedLocationProviderClient)
-  2. 위 클라이언트로 마지막 알려진 위치 요청 -> 통제자 위치업데이트 필요 (일정한 간격을 설정해서 업데이트 받는식으로 위치를 받음)
-    2-1. 통제자 -> 구글 play 서비스에서 공통적으로 사용하는 위치 API (구글 play api 를 사용하는 앱끼리 최신위치정보를 공유::자원절약)
-  3. 위치 업데이트 요청 -> 기기에 시스템설정(gps 등..) 확인 필요
+  2. 통제자 클라이언트 요청 -> 통제자 필요 (통제자에 위치 결과처리 콜백을 전달#[1]해서 위치 업데이트)
+    2-1. 통제자 -> 구글 play 서비스에서 위치확인을 위해 공통적으로 사용하는 시스템자원접근 API (구글 play api 를 사용하는 앱끼리 최신위치정보를 공유::자원절약)
+  3. 통제자 요청 -> 기기에 시스템설정(gps 등..) 확인 필요
   4. 시스템설정 확인 요청 ->  SettingsClient, Task<LocationSettingsResponse> 필요
     4-1. SettingsClient -> 시스템설정을 변경할수있는 접근자로 앱과 연결해 사용 todo 확인필요
     4-2. Task<LocationSettingsResponse> -> 시스템설정 확인 결과로 확인여부에 따라 실행할수있는 다른 리스너#[5]를 붙여 사용
@@ -75,9 +75,17 @@ import java.util.*
         5-2-1. 실패 리스너 에서 파라미터로 받은 예외에서 ResolvableApiException 타입인지확인
         5-2-2. 타입 확인된 예외로 startResolutionForResult 호출해 설정 수정 권한 입력받음
 
- ** 8/2 **
-  1.
 
+ ** 8/3 **
+  1. 통제자로 위치 업데이트 -> requestLocationUpdates(*p) 필요
+    1-1. requestLocationUpdates(*p) -> 요청서사양에 따른 위치가 업데이트될때마나 실행될 콜백을 전달 하는것으로 위치 업데이트처리
+    *p 에 locationRequest,locationCallback, Looper 넣어서 생성
+        1-1-1. locationRequest -> 요청서@[4-2-1]
+        1-1-2. locationCallback ->  LocationResult[Location 포함]을 파라미터로 받아 위치에 따른 처리를 하는 메서드를 가진 추상클래스
+            * onLocationResult(*p) 를 오버라이드해 생성
+        1-1-3. Looper -> 앱의 ui 업데이트시 필요한 메세지 전달을 위한 앱루퍼 todo 확인 필요
+  2. 통제자로 위치 업데이트 중지 -> removeLocationUpdates(*p) 필요
+    2-2. removeLocationUpdates(*p) -> *p 에 locationCallback@[1-1-2] 넣어 사용
 
 * */
 
@@ -88,52 +96,23 @@ class MapsActivity : AppCompatActivity(),
     OnMyLocationClickListener,
     ActivityResultCallback<Map<String,Boolean>>  {
 
-    private var isOnGPS = false
     private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivityMapsBinding
-    val LATLNG = LatLng(37.566418,126.977943)
-    val LATLNG_DONGBAEK = LatLng(37.2775928,127.1525655)
     private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private lateinit var locationCallback: LocationCallback
-    private lateinit var locationRequest: LocationRequest
 
+    private val LATLNG = LatLng(37.566418,126.977943)
+    private val LATLNG_DONGBAEK = LatLng(37.2775928,127.1525655)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityMapsBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        multipleLocationPermissionRequest()
+    private var locationCallback: LocationCallback
+    private var locationRequest: LocationRequest
+    private var isOnGPS :Boolean
 
-
-        val mapFragment = supportFragmentManager
-            .findFragmentById(R.id.map) as SupportMapFragment
-        mapFragment.getMapAsync(this)
-    }
-
-
-
-    /* map */
-    override fun onMapReady(googleMap: GoogleMap) {
-        mMap = googleMap
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+    init {
         locationRequest = LocationRequest.create().apply {
             interval = 10000
             fastestInterval = 5000
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         }
-        setCamera(LATLNG_DONGBAEK)
-
-        locationSettingRequest()
-        updateLocation()
-        showGps(mMap)
-        // todo 여기부터 책
-        mMap.setOnMyLocationButtonClickListener(this)
-        mMap.setOnMyLocationClickListener(this)
-    }
-
-    @SuppressLint("MissingPermission")
-    private fun updateLocation() {
-
         locationCallback = object: LocationCallback(){
             override fun onLocationResult(locationResult: LocationResult) {
                 locationResult.let{
@@ -144,8 +123,84 @@ class MapsActivity : AppCompatActivity(),
                 }
             }
         }
-        fusedLocationClient.requestLocationUpdates(locationRequest,locationCallback, Looper.getMainLooper())
+        isOnGPS = false
+    }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityMapsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        multipleLocationPermissionRequest()
+
+        val mapFragment = supportFragmentManager
+            .findFragmentById(R.id.map) as SupportMapFragment
+        mapFragment.getMapAsync(this)
+    }
+
+    /* CallBack */
+
+    override fun onMapReady(googleMap: GoogleMap) {
+        mMap = googleMap
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
+        setCamera(LATLNG_DONGBAEK)
+
+        locationSettingRequest()
+
+        showGps(mMap)
+
+        mMap.setOnMyLocationButtonClickListener(this)
+        mMap.setOnMyLocationClickListener(this)
+
+    }
+    override fun onActivityResult(permissions: Map<String, Boolean>) = permissions.forEach{
+        when{
+            it.key == Manifest.permission.ACCESS_COARSE_LOCATION && it.value ->{PermissionPolicy.defaultGrant("ACCESS_COARSE_LOCATION")
+                showGps(mMap)
+            }
+            it.key == Manifest.permission.ACCESS_FINE_LOCATION && it.value->{PermissionPolicy.defaultGrant("ACCESS_FINE_LOCATION")}
+            else ->{PermissionPolicy.defaultReject(it.key)}
+        }
+    }
+    override fun onMyLocationClick(location: Location) {
+        Toast.makeText(this, "Current location:\n$location", Toast.LENGTH_LONG)
+            .show()
+    }
+    override fun onMyLocationButtonClick(): Boolean {
+
+        // Return false so that we don't consume the event and the default behavior still occurs
+        // (the camera animates to the user's current position).
+
+        if(!isOnGPS) {
+            isOnGPS = true
+            Toast.makeText(this, "MyLocation button clicked : $isOnGPS", Toast.LENGTH_SHORT).show()
+            updateLocation()
+        }
+        else
+        {
+            isOnGPS= false
+            Toast.makeText(this, "MyLocation button clicked : $isOnGPS", Toast.LENGTH_SHORT).show()
+            stopLocation()
+        }
+        return false
+    }
+
+
+    /* Map Util */
+    @SuppressLint("MissingPermission")
+    private fun updateLocation() {
+        fusedLocationClient.requestLocationUpdates(locationRequest,locationCallback, Looper.getMainLooper())
+    }
+    private fun stopLocation() {
+        fusedLocationClient.removeLocationUpdates(locationCallback)
+        mMap.clear()
+    }
+    private fun setLastLocation(lastLocation:Location) {
+        mMap.clear()
+        LatLng(lastLocation.latitude,lastLocation.longitude).let{
+            setCamera(it)
+            setMarker(it)
+        }
     }
     private fun setMarker(latLng: LatLng) {
         val bitmapDrawable = bitmapDescriptorFromVector(this, R.drawable.marker)
@@ -167,14 +222,28 @@ class MapsActivity : AppCompatActivity(),
         mMap.moveCamera(cameraUpdate)
     }
 
-    override fun onActivityResult(permissions: Map<String, Boolean>) = permissions.forEach{
-        when{
-            it.key == Manifest.permission.ACCESS_COARSE_LOCATION && it.value ->{PermissionPolicy.defaultGrant("ACCESS_COARSE_LOCATION")
-                showGps(mMap)
-            }
-            it.key == Manifest.permission.ACCESS_FINE_LOCATION && it.value->{PermissionPolicy.defaultGrant("ACCESS_FINE_LOCATION")}
-            else ->{PermissionPolicy.defaultReject(it.key)}
+    private fun showGps(mMap:GoogleMap){
+        val checkP= ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+        if(checkP == PackageManager.PERMISSION_GRANTED) {
+            mMap.isMyLocationEnabled = true
         }
+    }
+
+
+
+    /* Util */
+    private fun bitmapDescriptorFromVector(context: Context, vectorResId: Int): BitmapDescriptor? {
+        val vectorDrawable = ContextCompat.getDrawable(context, vectorResId)
+        vectorDrawable!!.setBounds(0,
+            0,
+            vectorDrawable.intrinsicWidth,
+            vectorDrawable.intrinsicHeight)
+        val bitmap = Bitmap.createBitmap(vectorDrawable.intrinsicWidth,
+            vectorDrawable.intrinsicHeight,
+            Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        vectorDrawable.draw(canvas)
+        return BitmapDescriptorFactory.fromBitmap(bitmap)
     }
     private  fun MarkerOptions.setAddress(){
         try {// todo 주소 클래스 분석
@@ -193,53 +262,6 @@ class MapsActivity : AppCompatActivity(),
             }
         } catch (e: Exception) {
             e.printStackTrace() // getFromLocation() may sometimes fail
-        }
-    }
-    fun moveCameraLauncher(map:GoogleMap,latLng: LatLng){
-        val cameraPosition = CameraPosition.Builder()
-            .target(latLng)
-            .zoom(17.0f)
-            .build()
-        val cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition)
-        map.moveCamera(cameraUpdate)
-    }
-    override fun onMyLocationClick(location: Location) {
-        Toast.makeText(this, "Current location:\n$location", Toast.LENGTH_LONG)
-            .show()
-    }
-    override fun onMyLocationButtonClick(): Boolean {
-
-        // Return false so that we don't consume the event and the default behavior still occurs
-        // (the camera animates to the user's current position).
-
-        if(!isOnGPS) {
-            isOnGPS = true
-            Toast.makeText(this, "MyLocation button clicked : ON", Toast.LENGTH_SHORT).show()
-        }
-        else
-        {
-            isOnGPS= false
-            Toast.makeText(this, "MyLocation button clicked : OFF", Toast.LENGTH_SHORT).show()
-        }
-        return false
-    }
-    private fun bitmapDescriptorFromVector(context: Context, vectorResId: Int): BitmapDescriptor? {
-        val vectorDrawable = ContextCompat.getDrawable(context, vectorResId)
-        vectorDrawable!!.setBounds(0,
-            0,
-            vectorDrawable.intrinsicWidth,
-            vectorDrawable.intrinsicHeight)
-        val bitmap = Bitmap.createBitmap(vectorDrawable.intrinsicWidth,
-            vectorDrawable.intrinsicHeight,
-            Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(bitmap)
-        vectorDrawable.draw(canvas)
-        return BitmapDescriptorFactory.fromBitmap(bitmap)
-    }
-    fun showGps(mMap:GoogleMap){
-        val checkP= ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-        if(checkP == PackageManager.PERMISSION_GRANTED) {
-            mMap.isMyLocationEnabled = true
         }
     }
 
@@ -268,7 +290,6 @@ class MapsActivity : AppCompatActivity(),
             }
         }
     }
-
     private fun locationSettingRequest(){
 
         val REQUEST_CHECK_SETTINGS = 0x1
@@ -298,13 +319,7 @@ class MapsActivity : AppCompatActivity(),
 
     }
 
-    private fun setLastLocation(lastLocation:Location) {
-        mMap.clear()
-        LatLng(lastLocation.latitude,lastLocation.longitude).let{
-            setCamera(it)
-            setMarker(it)
-        }
-    }
+
 
     // ***** 사용안함 *****
     private fun withCurrentLatLng(callback:(LatLng)->Unit) {
@@ -333,5 +348,13 @@ class MapsActivity : AppCompatActivity(),
             }
         }
     }
-
+    fun moveCameraLauncher(map:GoogleMap,latLng: LatLng){
+        val cameraPosition = CameraPosition.Builder()
+            .target(latLng)
+            .zoom(17.0f)
+            .build()
+        val cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition)
+        map.moveCamera(cameraUpdate)
     }
+
+}
