@@ -12,7 +12,9 @@ import android.location.Geocoder
 import android.location.Location
 import android.os.Bundle
 import android.os.Looper
+import android.util.AttributeSet
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.contract.ActivityResultContracts
@@ -28,6 +30,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.google.android.gms.tasks.Task
 import com.nuhlp.googlemapapi.databinding.ActivityMapsBinding
+import com.nuhlp.googlemapapi.util.BaseMapActivity
 import com.nuhlp.googlemapapi.util.PermissionPolicy
 import java.util.*
 
@@ -54,7 +57,7 @@ import java.util.*
 
  ** 8/1 ~ 8/2 **
   1. 위치 요청(권한승인후) -> 통합위치정보 제공자 클라이언트 필요(FusedLocationProviderClient)
-  2. 통제자 클라이언트 요청 -> 통제자 필요 (통제자에 위치 결과처리 콜백을 전달#[1]해서 위치 업데이트)
+  2. 통제자 클라이언트 요청 -> 통제자 필요 (통제자에 위치 결과처리 콜백을 전달해서 위치 업데이트#[1])
     2-1. 통제자 -> 구글 play 서비스에서 위치확인을 위해 공통적으로 사용하는 시스템자원접근 API (구글 play api 를 사용하는 앱끼리 최신위치정보를 공유::자원절약)
   3. 통제자 요청 -> 기기에 시스템설정(gps 등..) 확인 필요
   4. 시스템설정 확인 요청 ->  SettingsClient, Task<LocationSettingsResponse> 필요
@@ -71,9 +74,9 @@ import java.util.*
     4-3. Task 로 결과 확인
   5. Task 로 결과처리 리스너 연결 (성공/addOnSuccessListener, 실패/addOnFailureListener)
     5-1. 성공 -> 여기부터 현재위치 접근 가능
-    5-2. 실패 -> 사용자에게 위치 설정을 수정할 수 있는 권한을 요청
+    5-2. 실패 -> 사용자에게 시스템 설정을 바로 수정할 수 있는 선택창 실행
         5-2-1. 실패 리스너 에서 파라미터로 받은 예외에서 ResolvableApiException 타입인지확인
-        5-2-2. 타입 확인된 예외로 startResolutionForResult 호출해 설정 수정 권한 입력받음
+        5-2-2. 타입 확인된 예외로 startResolutionForResult 호출해 설정을 수정
 
 
  ** 8/3 **
@@ -87,274 +90,20 @@ import java.util.*
   2. 통제자로 위치 업데이트 중지 -> removeLocationUpdates(*p) 필요
     2-2. removeLocationUpdates(*p) -> *p 에 locationCallback@[1-1-2] 넣어 사용
 
+  3.
 * */
 
 
-class MapsActivity : AppCompatActivity(),
-    OnMapReadyCallback,
-    OnMyLocationButtonClickListener,
-    OnMyLocationClickListener,
-    ActivityResultCallback<Map<String,Boolean>>  {
+class MapsActivity : BaseMapActivity() {
 
-    private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivityMapsBinding
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    override val markerResourceId = R.drawable.marker
+    override val mapFragmentId= R.id.map
 
-    private val LATLNG = LatLng(37.566418,126.977943)
-    private val LATLNG_DONGBAEK = LatLng(37.2775928,127.1525655)
-
-    private var locationCallback: LocationCallback
-    private var locationRequest: LocationRequest
-    private var isOnGPS :Boolean
-
-    init {
-        locationRequest = LocationRequest.create().apply {
-            interval = 10000
-            fastestInterval = 5000
-            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-        }
-        locationCallback = object: LocationCallback(){
-            override fun onLocationResult(locationResult: LocationResult) {
-                locationResult.let{
-                    for((i,location) in it.locations.withIndex()){
-                        Log.d("MapsActivity","$i ${location.latitude}, ${location.longitude}")
-                        setLastLocation(location)
-                    }
-                }
-            }
-        }
-        isOnGPS = false
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onCreateImpl(savedInstanceState: Bundle?) {
         binding = ActivityMapsBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        multipleLocationPermissionRequest()
-
-        val mapFragment = supportFragmentManager
-            .findFragmentById(R.id.map) as SupportMapFragment
-        mapFragment.getMapAsync(this)
     }
 
-    /* CallBack */
-
-    override fun onMapReady(googleMap: GoogleMap) {
-        mMap = googleMap
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-
-        setCamera(LATLNG_DONGBAEK)
-
-        locationSettingRequest()
-
-        showGps(mMap)
-
-        mMap.setOnMyLocationButtonClickListener(this)
-        mMap.setOnMyLocationClickListener(this)
-
-    }
-    override fun onActivityResult(permissions: Map<String, Boolean>) = permissions.forEach{
-        when{
-            it.key == Manifest.permission.ACCESS_COARSE_LOCATION && it.value ->{PermissionPolicy.defaultGrant("ACCESS_COARSE_LOCATION")
-                showGps(mMap)
-            }
-            it.key == Manifest.permission.ACCESS_FINE_LOCATION && it.value->{PermissionPolicy.defaultGrant("ACCESS_FINE_LOCATION")}
-            else ->{PermissionPolicy.defaultReject(it.key)}
-        }
-    }
-    override fun onMyLocationClick(location: Location) {
-        Toast.makeText(this, "Current location:\n$location", Toast.LENGTH_LONG)
-            .show()
-    }
-    override fun onMyLocationButtonClick(): Boolean {
-
-        // Return false so that we don't consume the event and the default behavior still occurs
-        // (the camera animates to the user's current position).
-
-        if(!isOnGPS) {
-            isOnGPS = true
-            Toast.makeText(this, "MyLocation button clicked : $isOnGPS", Toast.LENGTH_SHORT).show()
-            updateLocation()
-        }
-        else
-        {
-            isOnGPS= false
-            Toast.makeText(this, "MyLocation button clicked : $isOnGPS", Toast.LENGTH_SHORT).show()
-            stopLocation()
-        }
-        return false
-    }
-
-
-    /* Map Util */
-    @SuppressLint("MissingPermission")
-    private fun updateLocation() {
-        fusedLocationClient.requestLocationUpdates(locationRequest,locationCallback, Looper.getMainLooper())
-    }
-    private fun stopLocation() {
-        fusedLocationClient.removeLocationUpdates(locationCallback)
-        mMap.clear()
-    }
-    private fun setLastLocation(lastLocation:Location) {
-        mMap.clear()
-        LatLng(lastLocation.latitude,lastLocation.longitude).let{
-            setCamera(it)
-            setMarker(it)
-        }
-    }
-    private fun setMarker(latLng: LatLng) {
-        val bitmapDrawable = bitmapDescriptorFromVector(this, R.drawable.marker)
-        val discriptor = bitmapDrawable
-        val markerOptions = MarkerOptions()
-            .position(latLng)
-            .icon(discriptor)
-        markerOptions.setAddress()
-        /*.title("marker in Seoul City Hall")
-            .snippet("37.566418,126.977943")*/
-        mMap.addMarker(markerOptions)
-    }
-    private fun setCamera(latLng: LatLng) {
-        val cameraPosition = CameraPosition.Builder()
-            .target(latLng)
-            .zoom(20.0f)
-            .build()
-        val cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition)
-        mMap.moveCamera(cameraUpdate)
-    }
-
-    private fun showGps(mMap:GoogleMap){
-        val checkP= ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-        if(checkP == PackageManager.PERMISSION_GRANTED) {
-            mMap.isMyLocationEnabled = true
-        }
-    }
-
-
-
-    /* Util */
-    private fun bitmapDescriptorFromVector(context: Context, vectorResId: Int): BitmapDescriptor? {
-        val vectorDrawable = ContextCompat.getDrawable(context, vectorResId)
-        vectorDrawable!!.setBounds(0,
-            0,
-            vectorDrawable.intrinsicWidth,
-            vectorDrawable.intrinsicHeight)
-        val bitmap = Bitmap.createBitmap(vectorDrawable.intrinsicWidth,
-            vectorDrawable.intrinsicHeight,
-            Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(bitmap)
-        vectorDrawable.draw(canvas)
-        return BitmapDescriptorFactory.fromBitmap(bitmap)
-    }
-    private  fun MarkerOptions.setAddress(){
-        try {// todo 주소 클래스 분석
-            val geo =
-                Geocoder(this@MapsActivity, Locale.getDefault())
-            val addresses: List<Address> = geo.getFromLocation(LATLNG_DONGBAEK.latitude,LATLNG_DONGBAEK.longitude, 1)
-            if (addresses.isEmpty()) {
-                title("Waiting for Location")
-            } else {
-                if (addresses.size > 0) {
-                    addresses[0].apply{
-                        title(this.getAddressLine(0))
-                        Log.d("MapsActivity","0: ${this.getAddressLine(0)} \n")
-                    }
-                }
-            }
-        } catch (e: Exception) {
-            e.printStackTrace() // getFromLocation() may sometimes fail
-        }
-    }
-
-
-
-
-    /* permission */
-    private fun multipleLocationPermissionRequest(){
-        val checkPermission = PermissionPolicy.location.let{array->
-            array.all { p->
-                ContextCompat.checkSelfPermission(this,p) == PackageManager.PERMISSION_GRANTED }
-            }
-        val requestPermissionsLauncher = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions(),this)
-
-        when {
-            checkPermission -> { PermissionPolicy.defaultGrant("all grant")
-            }
-            /*한번 거절후 다음시작부터 적용*/
-            shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION) -> {
-                PermissionPolicy.ration(Manifest.permission.ACCESS_COARSE_LOCATION)
-                requestPermissionsLauncher.launch(PermissionPolicy.location)
-            }
-            else -> {
-                Log.d("PermissionPolicy","new request!!")
-                requestPermissionsLauncher.launch(PermissionPolicy.location)
-            }
-        }
-    }
-    private fun locationSettingRequest(){
-
-        val REQUEST_CHECK_SETTINGS = 0x1
-        val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
-        val client: SettingsClient = LocationServices.getSettingsClient(this)
-        val task: Task<LocationSettingsResponse> = client.checkLocationSettings(builder.build())
-        task.addOnSuccessListener { locationSettingsResponse ->
-            // All location settings are satisfied. The client can initialize
-            // location requests here.
-        }
-        task.addOnFailureListener { exception ->
-            if (exception is ResolvableApiException){
-                // Location settings are not satisfied, but this can be fixed
-                // by showing the user a dialog.
-                try {
-                    // Show the dialog by calling startResolutionForResult(),
-                    // and check the result in onActivityResult().
-                    exception.startResolutionForResult(this, REQUEST_CHECK_SETTINGS)
-
-                } catch (sendEx: IntentSender.SendIntentException) {
-                    // Ignore the error.
-                    Log.d("MapsActivity","========= catch")
-
-                }
-            }
-        }
-
-    }
-
-
-
-    // ***** 사용안함 *****
-    private fun withCurrentLatLng(callback:(LatLng)->Unit) {
-        val checkP = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-        if (checkP == PackageManager.PERMISSION_GRANTED) {
-            fusedLocationClient.lastLocation.addOnSuccessListener {
-                callback(LatLng(it.latitude, it.longitude))
-                Log.d("MapsActivity","${it.latitude} ${it.longitude}")
-            }
-        }
-    }
-    private fun soloLocationPermissionRequest(){
-        val checkPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-        val requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()){}
-        when {
-            checkPermission == PackageManager.PERMISSION_GRANTED -> {
-                PermissionPolicy.defaultGrant("")
-            }
-            /*한번 거절후 다음시작부터 적용*/
-            shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION) -> {
-                PermissionPolicy.ration(Manifest.permission.ACCESS_COARSE_LOCATION)
-                requestPermissionLauncher.launch(Manifest.permission.ACCESS_COARSE_LOCATION)
-            }
-            else -> {
-                requestPermissionLauncher.launch(Manifest.permission.ACCESS_COARSE_LOCATION)
-            }
-        }
-    }
-    fun moveCameraLauncher(map:GoogleMap,latLng: LatLng){
-        val cameraPosition = CameraPosition.Builder()
-            .target(latLng)
-            .zoom(17.0f)
-            .build()
-        val cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition)
-        map.moveCamera(cameraUpdate)
-    }
 
 }

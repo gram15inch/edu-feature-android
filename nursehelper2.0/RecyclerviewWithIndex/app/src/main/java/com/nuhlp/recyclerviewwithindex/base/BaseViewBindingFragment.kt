@@ -1,5 +1,6 @@
 package com.nuhlp.recyclerviewwithindex.base
 
+import android.app.Fragment
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -17,8 +18,8 @@ abstract class  BaseViewBindingFragment<T : ViewBinding> : Fragment() {
     ): View? {
         _binding = getFragmentBinding(layoutInflater,container)
         return binding.root
-    }
-    abstract fun getFragmentBinding(inflater: LayoutInflater, container: ViewGroup?): T
+}
+abstract fun getFragmentBinding(inflater: LayoutInflater, container: ViewGroup?): T
 
     override fun onDestroyView() {
         super.onDestroyView()
