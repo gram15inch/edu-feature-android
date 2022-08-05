@@ -1,4 +1,4 @@
-package com.nuhlp.restapi.network.kakao.model
+package com.nuhlp.restapi.network.kakao.model.address
 
 
 import com.squareup.moshi.Json

@@ -1,6 +1,8 @@
 package com.nuhlp.restapi.network.kakao
 
-import com.nuhlp.restapi.network.kakao.model.AddressResponse
+import com.nuhlp.restapi.network.kakao.model.NullToEmptyStringAdapter
+import com.nuhlp.restapi.network.kakao.model.address.AddressResponse
+import com.nuhlp.restapi.network.kakao.model.place.PlaceResponse
 import com.nuhlp.restapi.util.Constants.BASE_URL
 import com.nuhlp.restapi.util.Constants.REST_API_KEY
 import com.squareup.moshi.Moshi
@@ -15,6 +17,7 @@ import retrofit2.http.Query
 
 private val moshi = Moshi.Builder()
     .add(KotlinJsonAdapterFactory())
+    .add(NullToEmptyStringAdapter())
     .build()
 
 private val retrofit = Retrofit.Builder()
@@ -37,4 +40,17 @@ interface MapsApiService {
         @Query("page") page: Int=1,
         @Query("size") size: Int = 10
     ): AddressResponse
+
+    @Headers("Authorization: KakaoAK $REST_API_KEY")
+    @GET("/v2/local/search/category.json")
+    suspend fun getPlaces(
+        @Query("category_group_code") category: String,
+        @Query("y") latitude: Double ,
+        @Query("x") longitude: Double ,
+        @Query("radius") radius: Int = 100,
+        @Query("page") page: Int=1,
+        @Query("size") size: Int = 10
+    ): PlaceResponse
+
+
 }

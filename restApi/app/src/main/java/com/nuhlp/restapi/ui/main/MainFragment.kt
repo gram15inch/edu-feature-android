@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.nuhlp.restapi.R
 import com.nuhlp.restapi.network.kakao.KaKaoApi
+import com.nuhlp.restapi.util.Constants.LATLNG_DONGBAEK
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -36,7 +37,11 @@ class MainFragment : Fragment() {
         //todo 여기부터
         var str =""
         CoroutineScope(Dispatchers.IO).launch {
-            str = "${KaKaoApi.retrofitService.getLocations("경기도 용인시 기흥구 상하동 660")}"
+            //str = "${KaKaoApi.retrofitService.getLocations("경기도 용인시 기흥구 상하동 660")}"
+            LATLNG_DONGBAEK.let {
+
+            str="${KaKaoApi.retrofitService.getPlaces("HP8",it.latitude,it.longitude)}"
+            }
             Log.d("MainFragment", "size : $str")
         }
 
