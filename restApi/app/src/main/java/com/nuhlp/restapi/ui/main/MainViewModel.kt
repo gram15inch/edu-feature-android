@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.nuhlp.restapi.network.MarsApi
+import com.nuhlp.restapi.network.mars.MarsApi
 import kotlinx.coroutines.launch
 
 class MainViewModel : ViewModel() {
@@ -13,7 +13,7 @@ class MainViewModel : ViewModel() {
     val status: LiveData<String> = _status
 
     init {
-        getMarsPhotos()
+        //getMarsPhotos()
     }
 
 

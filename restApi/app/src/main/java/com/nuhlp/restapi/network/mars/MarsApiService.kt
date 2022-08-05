@@ -1,4 +1,4 @@
-package com.nuhlp.restapi.network
+package com.nuhlp.restapi.network.mars
 
 
 import com.squareup.moshi.Moshi
