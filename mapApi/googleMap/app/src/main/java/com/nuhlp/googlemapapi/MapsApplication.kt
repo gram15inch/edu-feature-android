@@ -1,11 +1,11 @@
-package com.nuhlp.restapi
+package com.nuhlp.googlemapapi
 
 import android.app.Application
 import com.kakao.sdk.common.KakaoSdk
-import com.nuhlp.restapi.BuildConfig.NATIVE_APP_KEY
-import java.util.*
+import com.nuhlp.googlemapapi.BuildConfig.NATIVE_APP_KEY
 
-class RestApiApplication :Application() {
+
+class MapsApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
