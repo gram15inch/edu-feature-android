@@ -1,4 +1,4 @@
-package com.nuhlp.googlemapapi.util
+package com.nuhlp.googlemapapi.util.map
 
 import android.location.Location
 import androidx.activity.result.ActivityResultCallback

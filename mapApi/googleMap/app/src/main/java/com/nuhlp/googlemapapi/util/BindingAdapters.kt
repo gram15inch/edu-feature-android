@@ -10,12 +10,19 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
+import com.google.android.gms.maps.model.LatLng
 import com.nuhlp.googlemapapi.R
 import com.nuhlp.googlemapapi.network.model.place.Document
 
 
-@BindingAdapter("textString","lifecycle")
-fun bindText(view: TextView, live:LiveData<List<Document>>,lifecycleOwner: LifecycleOwner ) {
+@BindingAdapter("liveListDocument","lifecycle")
+fun bindDocument(view: TextView, live:LiveData<List<Document>>,lifecycleOwner: LifecycleOwner ) {
+        live.observe(lifecycleOwner){
+                view.text = it.toString()
+        }
+}
+@BindingAdapter("liveLatLng","lifecycle")
+fun bindLatlng(view: TextView, live:LiveData<LatLng>,lifecycleOwner: LifecycleOwner ) {
         live.observe(lifecycleOwner){
                 view.text = it.toString()
         }

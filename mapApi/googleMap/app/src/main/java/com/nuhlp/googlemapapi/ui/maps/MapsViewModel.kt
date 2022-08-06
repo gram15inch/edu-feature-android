@@ -15,7 +15,8 @@ class MapsViewModel (application: Application) : AndroidViewModel(application) {
 
     private val _places = MutableLiveData<List<Document>>()
     val places : LiveData<List<Document>> = _places
-
+    private val _myLocation = MutableLiveData<LatLng>()
+    val myLocation = _myLocation
 
     fun updatePlaces(latLng: LatLng){
         viewModelScope.launch{
@@ -25,9 +26,9 @@ class MapsViewModel (application: Application) : AndroidViewModel(application) {
             ).documents
         }
     }
-
-
-
+    fun updateMyLocation(latLng: LatLng){
+        _myLocation.value = latLng
+    }
     class Factory(val app: Application) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(MapsViewModel::class.java)) {
