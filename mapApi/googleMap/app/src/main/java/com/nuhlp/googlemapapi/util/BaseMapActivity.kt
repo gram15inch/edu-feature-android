@@ -26,21 +26,15 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.google.android.gms.tasks.Task
+import com.nuhlp.googlemapapi.util.Constants.LATLNG_DONGBAEK
 import java.util.*
 
-abstract class BaseMapActivity :AppCompatActivity(), OnMapReadyCallback,
-    GoogleMap.OnMyLocationButtonClickListener,
-    GoogleMap.OnMyLocationClickListener,
-    ActivityResultCallback<Map<String, Boolean>> {
+abstract class BaseMapActivity :AppCompatActivity(),MapUtil {
 
 
     private lateinit var mMap: GoogleMap
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
-    private val LATLNG = LatLng(37.566418,126.977943)
-    private val LATLNG_DONGBAEK = LatLng(37.2775928,127.1525655)
-    abstract val markerResourceId : Int
-    abstract val mapFragmentId : Int
     private var locationCallback: LocationCallback
     private var locationRequest: LocationRequest
     private var isOnGPS :Boolean
@@ -64,17 +58,24 @@ abstract class BaseMapActivity :AppCompatActivity(), OnMapReadyCallback,
         isOnGPS = false
     }
 
+    /* abstract */
+    abstract val markerResourceId : Int
+    abstract val mapFragmentId : Int
+    abstract fun updateLatLng(latLng: LatLng)
+    abstract fun onCreateAfter(savedInstanceState: Bundle?)
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         multipleLocationPermissionRequest()
-        onCreateImpl(savedInstanceState)
+        onCreateAfter(savedInstanceState)
         val mapFragment = supportFragmentManager
             .findFragmentById(mapFragmentId) as SupportMapFragment
         mapFragment.getMapAsync(this)
     }
-    open fun onCreateImpl(savedInstanceState: Bundle?){}
 
-    /* CallBack */
+
+    /* Map Util CallBack */
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
@@ -122,7 +123,7 @@ abstract class BaseMapActivity :AppCompatActivity(), OnMapReadyCallback,
     }
 
 
-    /* Map Util */
+    /* Activity Util */
     @SuppressLint("MissingPermission")
     private fun updateLocation() {
         fusedLocationClient.requestLocationUpdates(locationRequest,locationCallback, Looper.getMainLooper())
@@ -139,8 +140,12 @@ abstract class BaseMapActivity :AppCompatActivity(), OnMapReadyCallback,
             updateLatLng(it)
         }
     }
-
-    abstract fun updateLatLng(latLng: LatLng)
+    private fun showGps(mMap:GoogleMap){
+        val checkP= ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+        if(checkP == PackageManager.PERMISSION_GRANTED) {
+            mMap.isMyLocationEnabled = true
+        }
+    }
 
     fun setMarker(latLng: LatLng) {
         val bitmapDrawable = bitmapDescriptorFromVector(this, markerResourceId)
@@ -153,7 +158,6 @@ abstract class BaseMapActivity :AppCompatActivity(), OnMapReadyCallback,
             .snippet("37.566418,126.977943")*/
         mMap.addMarker(markerOptions)
     }
-
     fun setCamera(latLng: LatLng) {
         val cameraPosition = CameraPosition.Builder()
             .target(latLng)
@@ -163,16 +167,8 @@ abstract class BaseMapActivity :AppCompatActivity(), OnMapReadyCallback,
         mMap.moveCamera(cameraUpdate)
     }
 
-    private fun showGps(mMap:GoogleMap){
-        val checkP= ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-        if(checkP == PackageManager.PERMISSION_GRANTED) {
-            mMap.isMyLocationEnabled = true
-        }
-    }
 
-
-
-    /* Util */
+    /* Component Util */
     private fun bitmapDescriptorFromVector(context: Context, vectorResId: Int): BitmapDescriptor? {
         val vectorDrawable = ContextCompat.getDrawable(context, vectorResId)
         vectorDrawable!!.setBounds(0,
@@ -186,7 +182,7 @@ abstract class BaseMapActivity :AppCompatActivity(), OnMapReadyCallback,
         vectorDrawable.draw(canvas)
         return BitmapDescriptorFactory.fromBitmap(bitmap)
     }
-    private  fun MarkerOptions.setAddress(){
+    private fun MarkerOptions.setAddress(){
         try {
             val geo =
                 Geocoder(this@BaseMapActivity, Locale.getDefault())
@@ -205,8 +201,6 @@ abstract class BaseMapActivity :AppCompatActivity(), OnMapReadyCallback,
             e.printStackTrace() // getFromLocation() may sometimes fail
         }
     }
-
-
 
 
     /* permission */

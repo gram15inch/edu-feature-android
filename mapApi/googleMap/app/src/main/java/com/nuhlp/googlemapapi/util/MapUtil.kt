@@ -14,6 +14,6 @@ interface MapUtil : OnMapReadyCallback,
     override fun onMapReady(p0: GoogleMap)
     override fun onMyLocationButtonClick(): Boolean
     override fun onMyLocationClick(p0: Location)
-    override fun onActivityResult(result: Map<String, Boolean>?)
+    override fun onActivityResult(result: Map<String, Boolean>)
 
 }

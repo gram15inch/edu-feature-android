@@ -1,20 +1,14 @@
 package com.nuhlp.googlemapapi.ui.maps
 
 import android.os.Bundle
-import android.os.PersistableBundle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.nuhlp.googlemapapi.R
 import com.nuhlp.googlemapapi.databinding.ActivityMapsBinding
-import com.nuhlp.googlemapapi.util.BaseMap
 import com.nuhlp.googlemapapi.util.BaseMapActivity
 import com.nuhlp.googlemapapi.util.Constants
-import com.nuhlp.googlemapapi.util.MapUtil
 
 
 /* map api 학습 일지
@@ -72,8 +66,8 @@ import com.nuhlp.googlemapapi.util.MapUtil
 
 
 class MapsActivity
-    //: BaseMapActivity()
-  : BaseMap()
+    : BaseMapActivity()
+ // : BaseMap()
 {
 
     private lateinit var binding: ActivityMapsBinding
@@ -99,6 +93,9 @@ class MapsActivity
         mapFragment.getMapAsync(this)
     }
 
+    override fun updateLatLng(latLng: LatLng) {
+
+    }
 /*
 
      override fun onCreateImpl(savedInstanceState: Bundle?) {
