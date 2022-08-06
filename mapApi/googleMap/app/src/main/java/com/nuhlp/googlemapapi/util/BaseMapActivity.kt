@@ -18,7 +18,6 @@ import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -27,11 +26,6 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.google.android.gms.tasks.Task
-import com.nuhlp.googlemapapi.network.KaKaoApi
-import com.nuhlp.googlemapapi.network.model.place.Document
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import java.util.*
 
 abstract class BaseMapActivity :AppCompatActivity(), OnMapReadyCallback,
@@ -78,7 +72,7 @@ abstract class BaseMapActivity :AppCompatActivity(), OnMapReadyCallback,
             .findFragmentById(mapFragmentId) as SupportMapFragment
         mapFragment.getMapAsync(this)
     }
-    abstract fun onCreateImpl(savedInstanceState: Bundle?)
+    open fun onCreateImpl(savedInstanceState: Bundle?){}
 
     /* CallBack */
 
@@ -142,10 +136,13 @@ abstract class BaseMapActivity :AppCompatActivity(), OnMapReadyCallback,
         LatLng(lastLocation.latitude,lastLocation.longitude).let{
             setCamera(it)
             setMarker(it)
-            getPlaceMarker(it)
+            updateLatLng(it)
         }
     }
-    private fun setMarker(latLng: LatLng) {
+
+    abstract fun updateLatLng(latLng: LatLng)
+
+    fun setMarker(latLng: LatLng) {
         val bitmapDrawable = bitmapDescriptorFromVector(this, markerResourceId)
         val discriptor = bitmapDrawable
         val markerOptions = MarkerOptions()
@@ -156,23 +153,8 @@ abstract class BaseMapActivity :AppCompatActivity(), OnMapReadyCallback,
             .snippet("37.566418,126.977943")*/
         mMap.addMarker(markerOptions)
     }
-    private fun getPlaceMarker(latLng: LatLng){
-        CoroutineScope(Dispatchers.IO).launch {
-            places.value = KaKaoApi.retrofitService
-                .getPlaces("HP8", latLng.latitude,latLng.longitude)
-                .documents
-            //todo 백그라운드 setValue 오류 고치기
-            //todo viewModelScope로 하면 될듯?
-        }
-    }
-    val places = MutableLiveData<List<Document>>().apply {
-        this.observe(this@BaseMapActivity){ list ->
-            list.forEach {
-                setMarker(LatLng(it.y.toDouble(),it.x.toDouble()))
-            }
-        }
-    }
-    private fun setCamera(latLng: LatLng) {
+
+    fun setCamera(latLng: LatLng) {
         val cameraPosition = CameraPosition.Builder()
             .target(latLng)
             .zoom(20.0f)

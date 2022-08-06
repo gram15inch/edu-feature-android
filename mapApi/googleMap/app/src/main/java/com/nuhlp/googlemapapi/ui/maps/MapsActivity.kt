@@ -1,43 +1,20 @@
-package com.nuhlp.googlemapapi
+package com.nuhlp.googlemapapi.ui.maps
 
-import android.Manifest
-import android.annotation.SuppressLint
-import android.content.Context
-import android.content.IntentSender
-import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.location.Address
-import android.location.Geocoder
-import android.location.Location
 import android.os.Bundle
-import android.os.Looper
-import android.util.AttributeSet
-import android.util.Log
-import android.view.View
-import android.widget.Toast
-import androidx.activity.result.ActivityResultCallback
-import androidx.activity.result.contract.ActivityResultContracts
+import android.os.PersistableBundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
-import com.google.android.gms.common.api.ResolvableApiException
-import com.google.android.gms.location.*
-import com.google.android.gms.maps.CameraUpdateFactory
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.GoogleMap.*
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.*
-import com.google.android.gms.tasks.Task
+import com.google.android.gms.maps.model.LatLng
+import com.nuhlp.googlemapapi.R
 import com.nuhlp.googlemapapi.databinding.ActivityMapsBinding
+import com.nuhlp.googlemapapi.util.BaseMap
 import com.nuhlp.googlemapapi.util.BaseMapActivity
-import com.nuhlp.googlemapapi.util.PermissionPolicy
-import java.util.*
-
-
-/*
-* todo 1
-* */
+import com.nuhlp.googlemapapi.util.Constants
+import com.nuhlp.googlemapapi.util.MapUtil
 
 
 /* map api 학습 일지
@@ -94,16 +71,46 @@ import java.util.*
 * */
 
 
-class MapsActivity : BaseMapActivity() {
+class MapsActivity
+    //: BaseMapActivity()
+  : BaseMap()
+{
 
     private lateinit var binding: ActivityMapsBinding
     override val markerResourceId = R.drawable.marker
     override val mapFragmentId= R.id.map
 
-    override fun onCreateImpl(savedInstanceState: Bundle?) {
-        binding = ActivityMapsBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    private val _mapsViewModel: MapsViewModel by lazy {
+        ViewModelProvider(
+            this,
+            MapsViewModel.Factory(
+                this.application ?: throw IllegalAccessException("no exist activity")
+            )
+        ).get(MapsViewModel::class.java)
     }
 
+    override fun onCreateAfter(savedInstanceState: Bundle?) {
+        binding = DataBindingUtil.setContentView(this,R.layout.activity_maps)
+        binding.viewmodel = _mapsViewModel
+        binding.lifecycleOwner = this
+        _mapsViewModel.updatePlaces(Constants.LATLNG_DONGBAEK)
+        val mapFragment = supportFragmentManager
+            .findFragmentById(R.id.map) as SupportMapFragment
+        mapFragment.getMapAsync(this)
+    }
+
+/*
+
+     override fun onCreateImpl(savedInstanceState: Bundle?) {
+        binding = DataBindingUtil.setContentView(this,R.layout.activity_maps)
+        binding.viewmodel = _mapsViewModel
+        binding.lifecycleOwner = this
+        _mapsViewModel.updatePlaces(Constants.LATLNG_DONGBAEK)
+    }
+
+    override fun updateLatLng(latLng: LatLng) {
+        _mapsViewModel.updatePlaces(latLng)
+    }
+*/
 
 }
