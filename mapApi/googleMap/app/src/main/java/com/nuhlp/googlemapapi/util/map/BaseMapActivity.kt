@@ -241,8 +241,8 @@ abstract class BaseMapActivity :AppCompatActivity(), MapUtil {
         val markerOptions = MarkerOptions()
             .position(place.toLatLng())
             .icon(discriptor)
-        .title("${place.placeName}")
-            .snippet("${place.categoryName}")
+            .title(place.placeName)
+            .snippet(place.categoryName)
         mMap.addMarker(markerOptions)
     }
 
