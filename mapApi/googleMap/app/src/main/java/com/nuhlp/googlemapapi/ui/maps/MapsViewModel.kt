@@ -27,8 +27,6 @@ class MapsViewModel (application: Application) : AndroidViewModel(application) {
         _myLocation.value = latLng
     }
 
-
-
     class Factory(val app: Application) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(MapsViewModel::class.java)) {

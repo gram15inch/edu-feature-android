@@ -30,7 +30,7 @@ fun bindLatlng(view: TextView, live:LiveData<LatLng>,lifecycleOwner: LifecycleOw
 @BindingAdapter("livePlace","lifecycle")
 fun bindPlace(view : TextView, live:LiveData<Place>, lifecycleOwner: LifecycleOwner) {
         live.observe(lifecycleOwner){
-                place -> view.text = place.toString()
+                place -> view.text = place?.toString()?:"null~~~~~~~~~~~~!"
         }
 }
 

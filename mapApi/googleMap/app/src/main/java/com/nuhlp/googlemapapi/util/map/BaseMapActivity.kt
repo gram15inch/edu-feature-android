@@ -17,6 +17,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -234,7 +235,7 @@ abstract class BaseMapActivity :AppCompatActivity(), MapUtil {
             .snippet("37.566418,126.977943")*/
         mMap.addMarker(markerOptions)
     }
-    fun setPlaceMarker(place: Place) {
+    fun setPlaceMarker(place: Place, placeLive: MutableLiveData<Place>) {
         val bitmapDrawable = bitmapDescriptorFromVector(this, markerResourceId)
         val discriptor = bitmapDrawable
         val markerOptions = MarkerOptions()
@@ -243,6 +244,8 @@ abstract class BaseMapActivity :AppCompatActivity(), MapUtil {
             .title(place.placeName)
             .snippet(place.categoryName)
         mMap.setOnMarkerClickListener(){
+            placeLive.value = place
+            // todo 마커는 되고 place는 안되는 이유찾기
             false
         }
         mMap.addMarker(markerOptions)
