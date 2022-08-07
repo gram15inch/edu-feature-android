@@ -18,6 +18,8 @@ class MapsViewModel (application: Application) : AndroidViewModel(application) {
     private val _myLocation = MutableLiveData<LatLng>()
     val myLocation = _myLocation
 
+
+
     fun updatePlaces(latLng: LatLng){
         viewModelScope.launch{
             _places.value = KaKaoApi.retrofitService.getPlaces(
@@ -29,6 +31,9 @@ class MapsViewModel (application: Application) : AndroidViewModel(application) {
     fun updateMyLocation(latLng: LatLng){
         _myLocation.value = latLng
     }
+
+
+
     class Factory(val app: Application) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(MapsViewModel::class.java)) {

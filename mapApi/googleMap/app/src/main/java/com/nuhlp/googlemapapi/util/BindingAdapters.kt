@@ -38,12 +38,14 @@ fun bindLatlng(view: TextView, live:LiveData<LatLng>,lifecycleOwner: LifecycleOw
 
 @BindingAdapter("liveListDocument","lifecycle","activity")
 fun bindPlaces(view : FragmentContainerView,live:LiveData<List<Document>>,lifecycleOwner: LifecycleOwner,activity:MapsActivity ) {
-        live.observe(lifecycleOwner){ list ->
-                list.forEach {
-                        activity.setMarker(LatLng(it.y.toDouble(),it.x.toDouble()))
+     /*   view.getFragment<SupportMapFragment>().getMapAsync {map->
+                live.observe(lifecycleOwner){ list ->
+                        list.forEach {
+                                activity.setMarker(LatLng(it.y.toDouble(),it.x.toDouble()),map)
+                        }
+                        Log.d("BindingAdapter","size: "+list.size.toString())
                 }
-                Log.d("BindingAdapter","size: "+list.size.toString())
-        }
+        }*/
 }
 
 

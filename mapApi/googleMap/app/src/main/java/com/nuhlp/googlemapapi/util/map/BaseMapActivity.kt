@@ -89,7 +89,8 @@ abstract class BaseMapActivity :AppCompatActivity(), MapUtil {
     private var locationCallback: LocationCallback
     private var locationRequest: LocationRequest
     private var isOnGPS :Boolean
-
+    var isGpsToggle : Boolean
+    var isGpsButton : get() = !isGpsToggle
     init {
         locationRequest = LocationRequest.create().apply {
             interval = 10000
@@ -106,6 +107,9 @@ abstract class BaseMapActivity :AppCompatActivity(), MapUtil {
             }
         }
         isOnGPS = false
+        /* 버튼 용도 변경 버튼/토글 */
+        isGpsToggle = false
+
     }
 
     /* abstract */
@@ -163,6 +167,13 @@ abstract class BaseMapActivity :AppCompatActivity(), MapUtil {
         // Return false so that we don't consume the event and the default behavior still occurs
         // (the camera animates to the user's current position).
 
+        when{
+            isGpsToggle-> gpsTogglePolicy()
+            isGpsButton-> gpsButtonPolicy()
+        }
+        return false
+    }
+    private fun gpsTogglePolicy(){
         if(!isOnGPS) {
             isOnGPS = true
             Toast.makeText(this, "MyLocation button clicked : $isOnGPS", Toast.LENGTH_SHORT).show()
@@ -174,25 +185,32 @@ abstract class BaseMapActivity :AppCompatActivity(), MapUtil {
             Toast.makeText(this, "MyLocation button clicked : $isOnGPS", Toast.LENGTH_SHORT).show()
             stopLocation()
         }
-        return false
+    }
+    private fun gpsButtonPolicy(){
+        updateLocation()
+        Toast.makeText(this, "MyLocation toggle clicked", Toast.LENGTH_SHORT).show()
     }
 
 
     /* Activity Util */
     @SuppressLint("MissingPermission")
     private fun updateLocation() {
+        if(isGpsButton)
+            mMap.clear()
         fusedLocationClient.requestLocationUpdates(locationRequest,locationCallback, Looper.getMainLooper())
     }
-    private fun stopLocation() {
+    fun stopLocation() {
         fusedLocationClient.removeLocationUpdates(locationCallback)
-        mMap.clear()
+        if(isGpsToggle)
+            mMap.clear()
     }
     private fun setLastLocation(lastLocation: Location) {
         mMap.clear()
         LatLng(lastLocation.latitude,lastLocation.longitude).let{
             setCamera(it)
-            //setMarker(it)
             onUpdateMyLatLng(it)
+            if(!isGpsToggle)
+                stopLocation()
         }
     }
     private fun showGps(mMap:GoogleMap){
@@ -213,10 +231,21 @@ abstract class BaseMapActivity :AppCompatActivity(), MapUtil {
             .snippet("37.566418,126.977943")*/
         mMap.addMarker(markerOptions)
     }
+    fun setMarker(latLng: LatLng,map:GoogleMap) {
+        val bitmapDrawable = bitmapDescriptorFromVector(this, markerResourceId)
+        val discriptor = bitmapDrawable
+        val markerOptions = MarkerOptions()
+            .position(latLng)
+            .icon(discriptor)
+        markerOptions.setAddress()
+        map.addMarker(markerOptions)
+    }
+
+
     fun setCamera(latLng: LatLng) {
         val cameraPosition = CameraPosition.Builder()
             .target(latLng)
-            .zoom(20.0f)
+            .zoom(17.5f)
             .build()
         val cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition)
         mMap.moveCamera(cameraUpdate)

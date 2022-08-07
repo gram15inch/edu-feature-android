@@ -34,9 +34,9 @@ class MapsActivity : BaseMapActivity() {
         binding.lifecycleOwner = this
         binding.activity = this
         _mapsViewModel.updatePlaces(Constants.LATLNG_DONGBAEK)
-        _mapsViewModel.places.observe(this){ places ->
-            places.forEach {
-                setMarker(LatLng(it.y.toDouble(),it.x.toDouble()))
+        _mapsViewModel.myLocation.observe(this){_->
+            _mapsViewModel.places.value?.forEach {place->
+                setMarker(LatLng(place.y.toDouble(),place.x.toDouble()))
             }
         }
     }
