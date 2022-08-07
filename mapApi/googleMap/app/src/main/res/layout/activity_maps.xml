@@ -10,6 +10,9 @@
         <variable
             name="lifecycleOwner"
             type="androidx.lifecycle.LifecycleOwner" />
+        <variable
+            name="activity"
+            type="com.nuhlp.googlemapapi.ui.maps.MapsActivity" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -27,10 +30,9 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.0"
-            app:lifecycle="@{lifecycleOwner}"
-            app:liveLatLng="@{viewmodel.myLocation}" />
+            />
 
-        <fragment
+        <androidx.fragment.app.FragmentContainerView
             android:id="@+id/map"
             android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="0dp"
@@ -39,7 +41,12 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView2"
-            tools:context=".ui.maps.MapsActivity"></fragment>
+            tools:context=".ui.maps.MapsActivity"
+            app:lifecycle="@{lifecycleOwner}"
+            app:liveListDocument="@{viewmodel.places}"
+            app:activity="@{activity}"
+            >
+        </androidx.fragment.app.FragmentContainerView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

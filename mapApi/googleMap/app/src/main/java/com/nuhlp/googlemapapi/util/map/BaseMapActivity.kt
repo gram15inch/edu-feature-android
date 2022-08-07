@@ -191,7 +191,7 @@ abstract class BaseMapActivity :AppCompatActivity(), MapUtil {
         mMap.clear()
         LatLng(lastLocation.latitude,lastLocation.longitude).let{
             setCamera(it)
-            setMarker(it)
+            //setMarker(it)
             onUpdateMyLatLng(it)
         }
     }
