@@ -1,31 +1,26 @@
 package com.nuhlp.googlemapapi.ui.maps
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.*
 import com.google.android.gms.maps.model.LatLng
 import com.nuhlp.googlemapapi.network.KaKaoApi
-import com.nuhlp.googlemapapi.network.model.place.Document
-import com.nuhlp.googlemapapi.util.Constants.LATLNG_DONGBAEK
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import com.nuhlp.googlemapapi.network.model.place.Place
 import kotlinx.coroutines.launch
 
 class MapsViewModel (application: Application) : AndroidViewModel(application) {
 
-    private val _places = MutableLiveData<List<Document>>()
-    val places : LiveData<List<Document>> = _places
+    private val _places = MutableLiveData<List<Place>>()
+    val places : LiveData<List<Place>> = _places
+    val place  = MutableLiveData<Place>()
     private val _myLocation = MutableLiveData<LatLng>()
     val myLocation = _myLocation
-
-
 
     fun updatePlaces(latLng: LatLng){
         viewModelScope.launch{
             _places.value = KaKaoApi.retrofitService.getPlaces(
                 "HP8",
                 latLng.latitude, latLng.longitude
-            ).documents
+            ).places
         }
     }
     fun updateMyLocation(latLng: LatLng){

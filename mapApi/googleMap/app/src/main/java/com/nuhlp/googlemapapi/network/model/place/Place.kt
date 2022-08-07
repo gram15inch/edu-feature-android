@@ -1,11 +1,12 @@
 package com.nuhlp.googlemapapi.network.model.place
 
 
+import com.google.android.gms.maps.model.LatLng
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class Document(
+data class Place(
     @Json(name = "address_name")
     val addressName: String,
     @Json(name = "category_group_code")
@@ -30,4 +31,7 @@ data class Document(
     val x: String,
     @Json(name = "y")
     val y: String
-)
+){
+    fun toLatLng()= LatLng(this.y.toDouble(),this.x.toDouble())
+
+}

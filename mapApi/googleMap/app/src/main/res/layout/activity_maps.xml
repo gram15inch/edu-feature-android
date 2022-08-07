@@ -30,6 +30,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.0"
+            app:lifecycle="@{lifecycleOwner}"
+            app:livePlace="@{viewmodel.place}"
             />
 
         <androidx.fragment.app.FragmentContainerView
@@ -42,9 +44,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView2"
             tools:context=".ui.maps.MapsActivity"
-            app:lifecycle="@{lifecycleOwner}"
-            app:liveListDocument="@{viewmodel.places}"
-            app:activity="@{activity}"
+
             >
         </androidx.fragment.app.FragmentContainerView>
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -24,6 +24,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.google.android.gms.tasks.Task
+import com.nuhlp.googlemapapi.network.model.place.Place
 import com.nuhlp.googlemapapi.util.Constants.LATLNG_DONGBAEK
 import com.nuhlp.googlemapapi.util.PermissionPolicy
 import java.util.*
@@ -89,8 +90,9 @@ abstract class BaseMapActivity :AppCompatActivity(), MapUtil {
     private var locationCallback: LocationCallback
     private var locationRequest: LocationRequest
     private var isOnGPS :Boolean
-    var isGpsToggle : Boolean
-    var isGpsButton : get() = !isGpsToggle
+    private var isGpsToggle : Boolean
+    private val isGpsButton : Boolean
+        get()  { return !isGpsToggle }
     init {
         locationRequest = LocationRequest.create().apply {
             interval = 10000
@@ -107,6 +109,7 @@ abstract class BaseMapActivity :AppCompatActivity(), MapUtil {
             }
         }
         isOnGPS = false
+
         /* 버튼 용도 변경 버튼/토글 */
         isGpsToggle = false
 
@@ -231,16 +234,17 @@ abstract class BaseMapActivity :AppCompatActivity(), MapUtil {
             .snippet("37.566418,126.977943")*/
         mMap.addMarker(markerOptions)
     }
-    fun setMarker(latLng: LatLng,map:GoogleMap) {
+
+    fun setPlaceMarker(place: Place) {
         val bitmapDrawable = bitmapDescriptorFromVector(this, markerResourceId)
         val discriptor = bitmapDrawable
         val markerOptions = MarkerOptions()
-            .position(latLng)
+            .position(place.toLatLng())
             .icon(discriptor)
-        markerOptions.setAddress()
-        map.addMarker(markerOptions)
+        .title("${place.placeName}")
+            .snippet("${place.categoryName}")
+        mMap.addMarker(markerOptions)
     }
-
 
     fun setCamera(latLng: LatLng) {
         val cameraPosition = CameraPosition.Builder()
@@ -277,7 +281,6 @@ abstract class BaseMapActivity :AppCompatActivity(), MapUtil {
                 if (addresses.size > 0) {
                     addresses[0].apply{
                         title(this.getAddressLine(0))
-                        Log.d("MapsActivity","0: ${this.getAddressLine(0)} \n")
                     }
                 }
             }
