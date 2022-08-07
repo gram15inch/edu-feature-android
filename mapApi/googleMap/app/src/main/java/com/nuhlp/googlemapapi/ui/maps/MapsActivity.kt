@@ -1,6 +1,7 @@
 package com.nuhlp.googlemapapi.ui.maps
 
 import android.os.Bundle
+import android.util.Log
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.maps.model.LatLng

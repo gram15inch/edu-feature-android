@@ -234,7 +234,6 @@ abstract class BaseMapActivity :AppCompatActivity(), MapUtil {
             .snippet("37.566418,126.977943")*/
         mMap.addMarker(markerOptions)
     }
-
     fun setPlaceMarker(place: Place) {
         val bitmapDrawable = bitmapDescriptorFromVector(this, markerResourceId)
         val discriptor = bitmapDrawable
@@ -243,8 +242,12 @@ abstract class BaseMapActivity :AppCompatActivity(), MapUtil {
             .icon(discriptor)
             .title(place.placeName)
             .snippet(place.categoryName)
+        mMap.setOnMarkerClickListener(){
+            false
+        }
         mMap.addMarker(markerOptions)
     }
+
 
     fun setCamera(latLng: LatLng) {
         val cameraPosition = CameraPosition.Builder()
@@ -378,4 +381,6 @@ abstract class BaseMapActivity :AppCompatActivity(), MapUtil {
         val cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition)
         map.moveCamera(cameraUpdate)
     }
+
+
 }
