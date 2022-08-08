@@ -57,7 +57,7 @@ abstract class BaseMapFragment<T : ViewDataBinding>: BaseDataBindingFragment<T>(
             override fun onLocationResult(locationResult: LocationResult) {
                 locationResult.let{ result ->
                     result.locations.forEach {location->
-                       // todo 주석헤제 setLastLocation(location)
+                        setLastLocation(location)
                     }
                 }
             }
@@ -135,7 +135,7 @@ abstract class BaseMapFragment<T : ViewDataBinding>: BaseDataBindingFragment<T>(
             mMap.clear()
         fusedLocationClient.requestLocationUpdates(locationRequest,locationCallback, Looper.getMainLooper())
     }
-    fun stopLocation() {
+    private fun stopLocation() {
         fusedLocationClient.removeLocationUpdates(locationCallback)
         if(isGpsToggle)
             mMap.clear()

@@ -12,11 +12,10 @@ import com.nuhlp.googlemapapi.ui.test.TestMapViewModel
 // 5초마다 업데이트 하지 않기 (업데이트 버튼 추가 and 앱 실행시마다) -> 내위치기준 버튼 클릭시마다
 // 마커 클릭이벤트 설정 ( 클릭시 텍스트뷰에 병원정보 넣기 [livedata])
 // 가장 가까운 병원정보 얻기 todo(근처에 여려개 병원정보 있을시 해결 정책 넣기[나중에])
-// todo 널스헬퍼 전체구조 파악
-// todo m
-// todo 구글맵 api 적용
-// todo 카카오 api 적용
-// todo baseMap 이식
+// mapActivity를 mapFragment로 축소
+// todo 널스헬퍼 전체구조 파악 @(현재진행중)
+// todo 널스헬퍼 카카오,구글맵 api 적용
+// todo baseMapFragment 이식
 // todo place 변수로 기존 db 데이터 조회
 class MapsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMapsBinding

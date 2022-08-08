@@ -26,7 +26,7 @@ class TestMapViewModel  (application: Application) : AndroidViewModel(applicatio
     }
     fun updateMyLocation(latLng: LatLng){
         _myLocation.value = latLng
-        Log.d("test","call !!!!!!!!")
+
     }
 
     class Factory(val app: Application) : ViewModelProvider.Factory {
