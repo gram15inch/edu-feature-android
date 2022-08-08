@@ -92,8 +92,7 @@ abstract class BaseMapActivity :AppCompatActivity(), MapUtil {
     private var locationRequest: LocationRequest
     private var isOnGPS :Boolean
     private var isGpsToggle : Boolean
-    private val isGpsButton : Boolean
-        get()  { return !isGpsToggle }
+    private val isGpsButton : Boolean get() { return !isGpsToggle }
     init {
         locationRequest = LocationRequest.create().apply {
             interval = 10000
@@ -177,23 +176,6 @@ abstract class BaseMapActivity :AppCompatActivity(), MapUtil {
         }
         return false
     }
-    private fun gpsTogglePolicy(){
-        if(!isOnGPS) {
-            isOnGPS = true
-            Toast.makeText(this, "MyLocation button clicked : $isOnGPS", Toast.LENGTH_SHORT).show()
-            updateLocation()
-        }
-        else
-        {
-            isOnGPS= false
-            Toast.makeText(this, "MyLocation button clicked : $isOnGPS", Toast.LENGTH_SHORT).show()
-            stopLocation()
-        }
-    }
-    private fun gpsButtonPolicy(){
-        updateLocation()
-        Toast.makeText(this, "MyLocation toggle clicked", Toast.LENGTH_SHORT).show()
-    }
 
 
     /* Activity Util */
@@ -223,6 +205,23 @@ abstract class BaseMapActivity :AppCompatActivity(), MapUtil {
             mMap.isMyLocationEnabled = true
         }
     }
+    private fun gpsTogglePolicy(){
+        if(!isOnGPS) {
+            isOnGPS = true
+            Toast.makeText(this, "MyLocation toggle clicked : $isOnGPS", Toast.LENGTH_SHORT).show()
+            updateLocation()
+        }
+        else
+        {
+            isOnGPS= false
+            Toast.makeText(this, "MyLocation button clicked : $isOnGPS", Toast.LENGTH_SHORT).show()
+            stopLocation()
+        }
+    }
+    private fun gpsButtonPolicy(){
+        updateLocation()
+        Toast.makeText(this, "MyLocation button clicked", Toast.LENGTH_SHORT).show()
+    }
 
     fun setMarker(latLng: LatLng) {
         val bitmapDrawable = bitmapDescriptorFromVector(this, markerResourceId)
@@ -235,7 +234,7 @@ abstract class BaseMapActivity :AppCompatActivity(), MapUtil {
             .snippet("37.566418,126.977943")*/
         mMap.addMarker(markerOptions)
     }
-    fun setPlaceMarker(place: Place, placeLive: MutableLiveData<Place>) {
+    fun setPlaceMarker(place: Place, callback: GoogleMap.OnMarkerClickListener) {
         val bitmapDrawable = bitmapDescriptorFromVector(this, markerResourceId)
         val discriptor = bitmapDrawable
         val markerOptions = MarkerOptions()
@@ -243,14 +242,9 @@ abstract class BaseMapActivity :AppCompatActivity(), MapUtil {
             .icon(discriptor)
             .title(place.placeName)
             .snippet(place.categoryName)
-        mMap.setOnMarkerClickListener(){
-            placeLive.value = place
-            // todo 마커는 되고 place는 안되는 이유찾기
-            false
-        }
-        mMap.addMarker(markerOptions)
+        mMap.setOnMarkerClickListener(callback)
+        mMap.addMarker(markerOptions)?.tag = place
     }
-
 
     fun setCamera(latLng: LatLng) {
         val cameraPosition = CameraPosition.Builder()
