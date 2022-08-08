@@ -1,27 +1,44 @@
 package com.nuhlp.googlemapapi.ui.maps
 
 import android.os.Bundle
-import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
 import com.nuhlp.googlemapapi.R
 import com.nuhlp.googlemapapi.databinding.ActivityMapsBinding
-import com.nuhlp.googlemapapi.network.model.place.Place
-import com.nuhlp.googlemapapi.util.map.BaseMapActivity
+import com.nuhlp.googlemapapi.ui.test.TestMapViewModel
 
 // 병원 마커 구해서 넣기
 // 5초마다 업데이트 하지 않기 (업데이트 버튼 추가 and 앱 실행시마다) -> 내위치기준 버튼 클릭시마다
 // 마커 클릭이벤트 설정 ( 클릭시 텍스트뷰에 병원정보 넣기 [livedata])
 // 가장 가까운 병원정보 얻기 todo(근처에 여려개 병원정보 있을시 해결 정책 넣기[나중에])
 // todo 널스헬퍼 전체구조 파악
+// todo m
 // todo 구글맵 api 적용
 // todo 카카오 api 적용
 // todo baseMap 이식
 // todo place 변수로 기존 db 데이터 조회
-class MapsActivity : BaseMapActivity() {
+class MapsActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityMapsBinding
+    private val mapsViewModel: MapsViewModel by lazy {
+        ViewModelProvider(this,
+            MapsViewModel.Factory(this.application ?:
+            throw IllegalAccessException("no exist activity"))
+        ).get(MapsViewModel::class.java)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = DataBindingUtil.setContentView(this,R.layout.activity_maps)
+        binding.viewmodel = mapsViewModel
+        binding.lifecycleOwner = this
+        binding.activity = this
+    }
+
+}
+
+
+/*class MapsActivity : B(aseMapActivity) {
 
     private lateinit var binding: ActivityMapsBinding
     override val markerResourceId = R.drawable.ic_hospital_marker
@@ -30,7 +47,7 @@ class MapsActivity : BaseMapActivity() {
     private val _mapsViewModel: MapsViewModel by lazy {
         ViewModelProvider(this,
             MapsViewModel.Factory(this.application ?:
-                throw IllegalAccessException("no exist activity"))
+            throw IllegalAccessException("no exist activity"))
         ).get(MapsViewModel::class.java)
     }
 
@@ -39,6 +56,7 @@ class MapsActivity : BaseMapActivity() {
         binding.viewmodel = _mapsViewModel
         binding.lifecycleOwner = this
         binding.activity = this
+
         _mapsViewModel.myLocation.observe(this){myLatLng->
             _mapsViewModel.updatePlaces(myLatLng)
         }
@@ -59,4 +77,4 @@ class MapsActivity : BaseMapActivity() {
         return false
     }
 
-}
+}*/

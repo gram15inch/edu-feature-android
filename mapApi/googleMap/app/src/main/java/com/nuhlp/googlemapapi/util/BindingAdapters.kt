@@ -9,8 +9,8 @@ import androidx.lifecycle.LiveData
 import com.google.android.gms.maps.model.LatLng
 import com.nuhlp.googlemapapi.network.model.place.Place
 import com.nuhlp.googlemapapi.ui.maps.MapsActivity
-
-
+//todo 주석풀기
+/*
 @BindingAdapter("liveListDocument","lifecycle","activity")
 fun bindDocument(view: TextView, live:LiveData<List<Place>>, lifecycleOwner: LifecycleOwner, activity:MapsActivity ) {
         live.observe(lifecycleOwner){ list ->
@@ -32,7 +32,7 @@ fun bindPlace(view : TextView, live:LiveData<Place>, lifecycleOwner: LifecycleOw
         live.observe(lifecycleOwner){
                 place -> view.text = place?.toString()?:"null~~~~~~~~~~~~!"
         }
-}
+}*/
 
 
 /*@BindingAdapter("imageUrl")
