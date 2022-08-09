@@ -10,28 +10,19 @@ import android.graphics.Canvas
 import android.location.Address
 import android.location.Geocoder
 import android.location.Location
-import android.os.Bundle
 import android.os.Looper
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
-import androidx.core.view.allViews
 import androidx.databinding.ViewDataBinding
-import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.google.android.gms.tasks.Task
-import com.nuhlp.googlemapapi.R
-import com.nuhlp.googlemapapi.databinding.FragmentMapBinding
 import com.nuhlp.googlemapapi.network.model.place.Place
-import com.nuhlp.googlemapapi.ui.test.TestMapViewModel
 import com.nuhlp.googlemapapi.util.Constants
 import com.nuhlp.googlemapapi.util.PermissionPolicy
 import com.nuhlp.googlemapapi.util.baseBinding.BaseDataBindingFragment
@@ -39,7 +30,7 @@ import java.util.*
 
 abstract class BaseMapFragment<T : ViewDataBinding>: BaseDataBindingFragment<T>(),MapUtil {
 
-    protected lateinit var mMap: GoogleMap
+    private lateinit var mMap: GoogleMap
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     private var locationCallback: LocationCallback
@@ -71,7 +62,6 @@ abstract class BaseMapFragment<T : ViewDataBinding>: BaseDataBindingFragment<T>(
 
     /* abstract */
     abstract val markerResourceId : Int
-    abstract val mapFragmentId : Int
     abstract fun onUpdateMyLatLng(latLng: LatLng)
     abstract fun onCreateViewAfterMap()
 
@@ -85,8 +75,8 @@ abstract class BaseMapFragment<T : ViewDataBinding>: BaseDataBindingFragment<T>(
 
     /* Map Util CallBack */
 
-    override fun onMapReady(googleMap: GoogleMap) {
-        mMap = googleMap
+    override fun onMapReady(p0: GoogleMap) {
+        mMap = p0
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         setCamera(Constants.LATLNG_DONGBAEK)
 
@@ -97,7 +87,7 @@ abstract class BaseMapFragment<T : ViewDataBinding>: BaseDataBindingFragment<T>(
         mMap.setOnMyLocationButtonClickListener(this)
         mMap.setOnMyLocationClickListener(this)
     }
-    override fun onActivityResult(permissions: Map<String, Boolean>) = permissions.forEach{
+    override fun onActivityResult(result: Map<String, Boolean>) = result.forEach{
         when{
             it.key == Manifest.permission.ACCESS_COARSE_LOCATION && it.value ->{
                 PermissionPolicy.defaultGrant("ACCESS_COARSE_LOCATION")
@@ -111,8 +101,8 @@ abstract class BaseMapFragment<T : ViewDataBinding>: BaseDataBindingFragment<T>(
             }
         }
     }
-    override fun onMyLocationClick(location: Location) {
-        Toast.makeText(requireActivity(), "Current location:\n$location", Toast.LENGTH_LONG)
+    override fun onMyLocationClick(p0: Location) {
+        Toast.makeText(requireActivity(), "Current location:\n$p0", Toast.LENGTH_LONG)
             .show()
     }
     override fun onMyLocationButtonClick(): Boolean {
@@ -196,7 +186,7 @@ abstract class BaseMapFragment<T : ViewDataBinding>: BaseDataBindingFragment<T>(
         mMap.addMarker(markerOptions)?.tag = place
     }
 
-    fun setCamera(latLng: LatLng) {
+    private fun setCamera(latLng: LatLng) {
         val cameraPosition = CameraPosition.Builder()
             .target(latLng)
             .zoom(17.5f)

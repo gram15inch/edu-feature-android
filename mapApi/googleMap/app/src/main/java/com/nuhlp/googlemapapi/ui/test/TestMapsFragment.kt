@@ -20,7 +20,6 @@ class TestMapsFragment : BaseMapFragment<FragmentMapBinding>() {
 
     override var layoutResourceId = R.layout.fragment_map
     override val markerResourceId = R.drawable.ic_hospital_marker
-    override val mapFragmentId= R.id.map
 
     private val _testMapViewModel : TestMapViewModel by lazy {
         ViewModelProvider(this,

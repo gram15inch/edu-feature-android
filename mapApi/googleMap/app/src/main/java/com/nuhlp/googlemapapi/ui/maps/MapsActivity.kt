@@ -36,7 +36,6 @@ class MapsActivity : AppCompatActivity() {
 
 }
 
-
 /*class MapsActivity : B(aseMapActivity) {
 
     private lateinit var binding: ActivityMapsBinding
