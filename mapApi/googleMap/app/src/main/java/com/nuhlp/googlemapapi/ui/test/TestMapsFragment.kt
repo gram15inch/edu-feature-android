@@ -37,6 +37,7 @@ class TestMapsFragment : BaseMapFragment<FragmentMapBinding>() {
             _testMapViewModel.updatePlaces(myLatLng)
         }
         _testMapViewModel.places.observe(this){places->
+            Log.d("test","call places")
             _testMapViewModel.place.value = places.minByOrNull { place-> place.distance }
             places.forEach {place->
                 setPlaceMarker(place,this)
@@ -46,7 +47,6 @@ class TestMapsFragment : BaseMapFragment<FragmentMapBinding>() {
 
     override fun onUpdateMyLatLng(latLng: LatLng) {
         _testMapViewModel.updateMyLocation(latLng)
-
     }
     override fun onMarkerClick(marker: Marker): Boolean {
         val tagPlace = marker.tag as Place

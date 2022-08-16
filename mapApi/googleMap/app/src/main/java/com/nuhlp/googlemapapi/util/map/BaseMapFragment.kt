@@ -79,7 +79,6 @@ abstract class BaseMapFragment<T : ViewDataBinding>: BaseDataBindingFragment<T>(
         mMap = p0
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         setCamera(Constants.LATLNG_DONGBAEK)
-
         locationSettingRequest()
 
         showGps(mMap)
@@ -87,6 +86,7 @@ abstract class BaseMapFragment<T : ViewDataBinding>: BaseDataBindingFragment<T>(
         mMap.setOnMyLocationButtonClickListener(this)
         mMap.setOnMyLocationClickListener(this)
     }
+
     override fun onActivityResult(result: Map<String, Boolean>) = result.forEach{
         when{
             it.key == Manifest.permission.ACCESS_COARSE_LOCATION && it.value ->{
