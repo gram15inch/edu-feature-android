@@ -1,17 +1,18 @@
-package com.nuhlp.customview.component
+package com.nuhlp.customview.views
 
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
-import android.widget.TextView
 import com.nuhlp.customview.R
 
 class Cavas1 @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
-    var xPos = 50f
+   private var str = "Cavas1"
+   private var xPos = 50f
         set(value)  {
             field = value
             invalidate()
@@ -27,15 +28,16 @@ class Cavas1 @JvmOverloads constructor(
 
         canvas?.also {
             if(xPos <100f)
-            it.drawText("12312312312", xPos, 50f ,indexPaint)
+            it.drawText(str, xPos, 50f ,indexPaint)
             if(xPos >=100f)
-                it.drawText("12312312312", xPos, 70f ,indexPaint)
+                it.drawText(str, xPos, 70f ,indexPaint)
 
         }
 
-
+        Log.d("Canvas1","onDraw()")
     }
-    fun reFlesh(){
+    fun reFlesh(str:String){
+        this.str = str
         invalidate()
     }
 }

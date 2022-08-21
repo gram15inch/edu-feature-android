@@ -12,10 +12,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding =  ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        binding.button1.setOnClickListener {
+      /*  binding.button1.setOnClickListener {
             binding.canvas1.xPos += 20f
             binding.button1.text= binding.canvas1.xPos.toString()
-        }
+        }*/
     }
 
 

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout"
+    tools:padding="10dp">
+
+    <ImageView
+        android:id="@+id/proImg"
+        android:layout_width="73dp"
+        android:layout_height="85dp"
+        android:layout_marginStart="42dp"
+        android:layout_marginTop="53dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_baseline_person_24" />
+
+    <TextView
+        android:id="@+id/text_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="56dp"
+        android:layout_marginTop="8dp"
+        android:text="name"
+        android:textSize="34sp"
+        app:layout_constraintStart_toEndOf="@+id/proImg"
+        app:layout_constraintTop_toTopOf="@+id/proImg" />
+
+    <TextView
+        android:id="@+id/textContents"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="contents"
+        android:textSize="34sp"
+        app:layout_constraintStart_toStartOf="@+id/text_name"
+        app:layout_constraintTop_toBottomOf="@+id/text_name" />
+</merge>

@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
+<layout>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="200dp">
+    android:layout_height="200dp"
+    android:background="#C9C9CA">
 
     <ImageView
         android:id="@+id/item_img"
@@ -11,13 +13,12 @@
         android:layout_height="100dp"
         android:layout_marginStart="40dp"
         android:layout_marginTop="55dp"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@drawable/ic_baseline_person_24" />
+        app:srcCompat="@drawable/ic_baseline_person_24" />
 
     <TextView
-        android:id="@+id/item_name2"
-        android:layout_width="125dp"
+        android:id="@+id/item_name"
+        android:layout_width="wrap_content"
         android:layout_height="32dp"
         android:layout_alignTop="@+id/item_img"
         android:layout_marginStart="58dp"
@@ -29,16 +30,17 @@
         app:layout_constraintTop_toTopOf="@+id/item_img" />
 
     <TextView
-        android:id="@+id/item_contents2"
-        android:layout_width="122dp"
+        android:id="@+id/item_contents"
+        android:layout_width="wrap_content"
         android:layout_height="37dp"
-        android:layout_below="@+id/item_name2"
-        android:layout_alignStart="@+id/item_name2"
+        android:layout_below="@+id/item_name"
+        android:layout_alignStart="@+id/item_name"
         android:layout_marginStart="-2dp"
         android:layout_marginTop="21dp"
         android:text="contents"
         android:textSize="20sp"
-        app:layout_constraintStart_toStartOf="@+id/item_name"
         tools:layout_editor_absoluteY="113dp" />
 
 </RelativeLayout>
+
+</layout>

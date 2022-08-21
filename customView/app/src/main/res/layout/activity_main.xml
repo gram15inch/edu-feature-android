@@ -6,34 +6,15 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <com.nuhlp.customview.component.InflateXml
-        android:id="@+id/inflateXml"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="531dp"
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragment_container_view_tag"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <view
-        class="com.nuhlp.customview.component.Cavas1"
-        android:id="@+id/canvas1"
-        android:layout_width="0dp"
-        android:layout_height="200dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/inflateXml">
-
-    </view>
-
-    <Button
-        android:id="@+id/button1"
-        android:layout_width="221dp"
-        android:layout_height="107dp"
-        android:layout_marginEnd="95dp"
-        android:layout_marginBottom="126dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:name="com.nuhlp.customview.dataBinding.DataBindingFragment"
+        tools:layout="@layout/nomal_fragment" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
