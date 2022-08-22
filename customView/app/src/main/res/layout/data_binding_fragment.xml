@@ -28,6 +28,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             />
+
         <view
             android:id="@+id/canvas1"
             class="com.nuhlp.customview.views.Cavas1"
@@ -67,16 +68,31 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:bindViewModel="@{viewModel}"
+            app:bindLifecycle="@{lifecycleOwner}"
             app:layout_constraintTop_toBottomOf="@+id/inflateXml" />
 
         <com.nuhlp.customview.views.InflateConsMergeXml
             android:id="@+id/inflateMergeXml"
             android:layout_width="match_parent"
             android:layout_height="200dp"
+            android:background="#FFD3D3"
+            app:bindViewModel="@{viewModel}"
+            app:bindLifecycle="@{lifecycleOwner}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/inflateConsXml" />
+
+        <com.nuhlp.customview.views.normal.NormalConsMerge
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:background="#F5FDE6"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/inflateMergeXml"
             app:bindViewModel="@{viewModel}"
-            app:layout_constraintTop_toBottomOf="@+id/inflateConsXml"/>
+            app:bindLifecycle="@{lifecycleOwner}"
+            />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

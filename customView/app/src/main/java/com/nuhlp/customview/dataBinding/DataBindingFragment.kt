@@ -24,4 +24,9 @@ class DataBindingFragment : BaseDataBindingFragment<DataBindingFragmentBinding>(
         binding.viewModel = viewModel
 
     }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.flow1Call()
+    }
 }

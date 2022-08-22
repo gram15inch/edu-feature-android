@@ -9,8 +9,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import com.nuhlp.customview.R
 import com.nuhlp.customview.databinding.DataBindingConsBinding
-import com.nuhlp.customview.databinding.ItemProfileConsBinding
-import com.nuhlp.customview.databinding.ItemProfileRelateBinding
 
 
 class InflateConsXml @JvmOverloads constructor(
