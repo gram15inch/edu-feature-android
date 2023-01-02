@@ -9,3 +9,23 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
     }
 }
+
+
+class ClassA(private val b: ClassB) {
+    fun executeA() {
+        b.executeB()
+    }
+}
+interface ClassB {
+    fun executeB()
+}
+class ClassB1() : ClassB {
+    override fun executeB() {
+        // Do something
+    }
+}
+class ClassB2() : ClassB {
+    override fun executeB() {
+        // Do something else
+    }
+}
