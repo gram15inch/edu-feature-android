@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
     <application
         android:name=".HiltApplication"
         android:allowBackup="true"
@@ -13,6 +15,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HiltLearning"
         tools:targetApi="31">
+        <activity
+            android:name=".ui.DaggerActivity"
+            android:exported="true">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -27,4 +36,5 @@
                 android:value="" />
         </activity>
     </application>
+
 </manifest>

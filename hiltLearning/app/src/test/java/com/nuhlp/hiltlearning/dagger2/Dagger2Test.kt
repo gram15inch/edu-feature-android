@@ -8,9 +8,6 @@ class Dagger2Test {
 
     @Test
     fun sameObject(){
-
-        val component = DaggerBindComponent.create()
-        
         Assertions.assertEquals(1, 1)
     }
 
