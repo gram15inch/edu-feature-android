@@ -1,4 +1,4 @@
-package com.nuhlp.hiltlearning
+package com.nuhlp.navigationdrawertest
 
 import org.junit.Test
 
