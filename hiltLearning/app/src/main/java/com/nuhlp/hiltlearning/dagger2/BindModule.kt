@@ -1,6 +1,5 @@
 package com.nuhlp.hiltlearning.dagger2
 
-import com.nuhlp.hiltlearning.basic.ClassB
 import dagger.Binds
 import dagger.Module
 

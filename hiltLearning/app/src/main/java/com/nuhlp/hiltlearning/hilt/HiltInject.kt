@@ -1,4 +1,4 @@
-package com.nuhlp.hiltlearning.dagger2
+package com.nuhlp.hiltlearning.hilt
 
 import timber.log.Timber
 import javax.inject.Inject
@@ -13,11 +13,11 @@ interface ClassB {
 }
 class ClassB1 @Inject constructor() : ClassB {
     override fun executeB() {
-        Timber.d("call Dagger2 B1")
+        Timber.d("call hilt B1")
     }
 }
 class ClassB2 @Inject constructor() : ClassB {
     override fun executeB() {
-        Timber.d("call Dagger2 B2")
+        Timber.d("call hilt B2")
     }
 }
