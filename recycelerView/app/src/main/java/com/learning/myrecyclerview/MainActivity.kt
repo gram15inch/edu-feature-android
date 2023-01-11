@@ -17,7 +17,6 @@ import timber.log.Timber
 @BindingAdapter("bindStatus")
 fun bindStatus(statusImageView: ImageView,
                status: UiStatus) {
-    Timber.tag("timber").d("${status.name}")
     when (status) {
         UiStatus.LOADING -> {
             statusImageView.visibility = View.VISIBLE
