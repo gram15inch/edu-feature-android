@@ -14,4 +14,5 @@ class ThreadGameApplication:Application() {
         context= this
         Timber.plant(Timber.DebugTree())
     }
+
 }
