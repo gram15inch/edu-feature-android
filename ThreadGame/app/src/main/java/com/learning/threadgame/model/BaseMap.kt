@@ -63,5 +63,5 @@ class BaseMap(context: Context?) : SurfaceView(context), SurfaceHolder.Callback 
             }
         }
     }
-    
+
 }
