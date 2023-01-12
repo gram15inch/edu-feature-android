@@ -7,16 +7,15 @@ import android.view.MotionEvent
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import com.learning.threadgame.R
-import com.learning.threadgame.thread.MyThread
-import timber.log.Timber
+import com.learning.threadgame.thread.MapThread
 
 class BaseMap(context: Context?) : SurfaceView(context), SurfaceHolder.Callback {
 
     private val myHolder: SurfaceHolder = holder
-    lateinit var myThread: MyThread
+    lateinit var myThread: MapThread
     lateinit var bgImg: BackgroundImg
+    lateinit var uiStatus: UiStatus
     lateinit var potatoes: List<Potato>
-    var score = 0
     private val potatoImgs = listOf(
         BitmapFactory.decodeResource(resources, R.drawable.ac_pto_1),
         BitmapFactory.decodeResource(resources, R.drawable.ac_pto_2),
@@ -45,10 +44,11 @@ class BaseMap(context: Context?) : SurfaceView(context), SurfaceHolder.Callback 
             Potato(potatoImgs, boxX + 200, boxY + 400),
             Potato(potatoImgs, boxX + 400, boxY + 400),
         )
-
-        myThread = MyThread(myHolder, this)
+        uiStatus = UiStatus()
+        myThread = MapThread(myHolder, this)
         myThread.threadRun = true
         myThread.start()
+
     }
 
     override fun surfaceChanged(p0: SurfaceHolder, p1: Int, p2: Int, p3: Int) {}
@@ -82,10 +82,11 @@ class BaseMap(context: Context?) : SurfaceView(context), SurfaceHolder.Callback 
         potatoes.firstOrNull() { potato -> potato.isClick(eventX, eventY) }
             ?.apply {
                 if(digPotato())
-                    score += 100
+                    uiStatus.score += 100
+                else
+                    uiStatus.life--
                 initPotato()
             }
-            Timber.tag("score").d("score: $score")
 
     }
 }

@@ -5,7 +5,7 @@ import android.view.SurfaceHolder
 import com.learning.threadgame.model.BaseMap
 
 
-class MyThread(private val surHolder: SurfaceHolder, val baseMap: BaseMap) : Thread() {
+class MapThread(private val surHolder: SurfaceHolder, val baseMap: BaseMap) : Thread() {
     var threadRun = true
 
     override fun run() {
@@ -15,6 +15,7 @@ class MyThread(private val surHolder: SurfaceHolder, val baseMap: BaseMap) : Thr
                 canvas = surHolder.lockCanvas(null)
                 synchronized(surHolder) {
                     baseMap.bgImg.draw(canvas)
+                    baseMap.uiStatus.draw(canvas)
                     for(potato in baseMap.potatoes)
                         potato.draw(canvas)
                 }
