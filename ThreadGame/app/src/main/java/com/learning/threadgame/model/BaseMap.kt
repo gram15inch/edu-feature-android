@@ -1,19 +1,23 @@
 package com.learning.threadgame.model
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.BitmapFactory
+import android.view.MotionEvent
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import com.learning.threadgame.R
 import com.learning.threadgame.thread.MyThread
+import timber.log.Timber
 
 class BaseMap(context: Context?) : SurfaceView(context), SurfaceHolder.Callback {
 
     private val myHolder: SurfaceHolder = holder
     lateinit var myThread: MyThread
     lateinit var bgImg: BackgroundImg
-    lateinit var potatos: List<Potato>
-    val potatoImgs = listOf(
+    lateinit var potatoes: List<Potato>
+    var score = 0
+    private val potatoImgs = listOf(
         BitmapFactory.decodeResource(resources, R.drawable.ac_pto_1),
         BitmapFactory.decodeResource(resources, R.drawable.ac_pto_2),
         BitmapFactory.decodeResource(resources, R.drawable.ac_pto_3),
@@ -28,28 +32,26 @@ class BaseMap(context: Context?) : SurfaceView(context), SurfaceHolder.Callback 
 
     override fun surfaceCreated(p0: SurfaceHolder) {
         bgImg = BackgroundImg(BitmapFactory.decodeResource(resources, R.drawable.ac_bg_run))
-        val boxX= 260
-        val boxY= 1100
-
-        potatos = listOf(
-            Potato(potatoImgs,boxX,boxY),
-            Potato(potatoImgs,boxX+200,boxY),
-            Potato(potatoImgs,boxX+400,boxY),
-            Potato(potatoImgs,boxX,1300),
-            Potato(potatoImgs,boxX+200,boxY+200),
-            Potato(potatoImgs,boxX+400,boxY+200),
-            Potato(potatoImgs,boxX,1500),
-            Potato(potatoImgs,boxX+200,boxY+400),
-            Potato(potatoImgs,boxX+400,boxY+400),
+        val boxX = 260
+        val boxY = 1100
+        potatoes = listOf(
+            Potato(potatoImgs, boxX, boxY),
+            Potato(potatoImgs, boxX + 200, boxY),
+            Potato(potatoImgs, boxX + 400, boxY),
+            Potato(potatoImgs, boxX, 1300),
+            Potato(potatoImgs, boxX + 200, boxY + 200),
+            Potato(potatoImgs, boxX + 400, boxY + 200),
+            Potato(potatoImgs, boxX, 1500),
+            Potato(potatoImgs, boxX + 200, boxY + 400),
+            Potato(potatoImgs, boxX + 400, boxY + 400),
         )
-        myThread = MyThread(myHolder,this)
+
+        myThread = MyThread(myHolder, this)
         myThread.threadRun = true
         myThread.start()
     }
 
-    override fun surfaceChanged(p0: SurfaceHolder, p1: Int, p2: Int, p3: Int) {
-
-    }
+    override fun surfaceChanged(p0: SurfaceHolder, p1: Int, p2: Int, p3: Int) {}
 
     override fun surfaceDestroyed(p0: SurfaceHolder) {
         myThread.threadRun = false
@@ -64,4 +66,26 @@ class BaseMap(context: Context?) : SurfaceView(context), SurfaceHolder.Callback 
         }
     }
 
+
+    @SuppressLint("ClickableViewAccessibility")
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+
+        when(event.action){
+            MotionEvent.ACTION_DOWN ->{checkClickPotatoes(event.x,event.y)
+            return true}
+        }
+
+        return false
+    }
+
+   private fun checkClickPotatoes(eventX: Float,eventY:Float) {
+        potatoes.firstOrNull() { potato -> potato.isClick(eventX, eventY) }
+            ?.apply {
+                if(digPotato())
+                    score += 100
+                initPotato()
+            }
+            Timber.tag("score").d("score: $score")
+
+    }
 }
