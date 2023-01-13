@@ -16,30 +16,21 @@ class Potato constructor(val bitmap: List<Bitmap>, x: Int, y: Int) {
     private val right = x + width
     private val top = y
     private val bottom = y + height
-    var potatoThread: PotatoThread? = null
-
-    init {
-        initPotato()
-    }
+    private lateinit var potatoThread: PotatoThread
 
     fun draw(canvas: Canvas) {
-        if (potatoThread != null) {
-            val dst = Rect(left, top, right, bottom)
-            val grw = potatoThread!!.grown
-            canvas.drawBitmap(bitmap[grw], null, dst, null)
-        }
-
+        val dst = Rect(left, top, right, bottom)
+        val grw = potatoThread!!.grown
+        canvas.drawBitmap(bitmap[grw], null, dst, null)
     }
 
     fun digPotato(): Boolean {
-        if (potatoThread != null) {
-            return potatoThread!!.grown == 5
-        }
-        return false
+        return potatoThread.grown == 5
     }
-    fun initPotato(){
+
+    fun initPotato() {
         potatoThread = PotatoThread()
-        potatoThread!!.start()
+        potatoThread.start()
     }
 
     fun isClick(x: Float, y: Float): Boolean {

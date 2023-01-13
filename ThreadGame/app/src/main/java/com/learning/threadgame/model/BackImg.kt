@@ -7,7 +7,7 @@ import android.graphics.Rect
 
 
 
-class BackgroundImg constructor(val bitmap: Bitmap) {
+class BackImg constructor(val bitmap: Bitmap) {
 
     fun draw(canvas: Canvas){
        val dst = Rect(0, 0, 1080 , 1920 )
