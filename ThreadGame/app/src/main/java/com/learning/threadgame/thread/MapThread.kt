@@ -5,11 +5,12 @@ import android.media.audiofx.DynamicsProcessing
 
 import android.view.SurfaceHolder
 import com.learning.threadgame.model.BaseMap
-
+import com.learning.threadgame.model.Stage
+import com.learning.threadgame.model.Step
 
 
 open class MapThread(private val surHolder: SurfaceHolder, val baseMap: BaseMap) : Thread()
-    ,Stage {
+    , Stage {
     var threadRun = true
 
     override fun run() {

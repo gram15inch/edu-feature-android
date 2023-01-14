@@ -3,7 +3,7 @@ package com.learning.threadgame.model
 import android.graphics.*
 import timber.log.Timber
 
-class StageButton constructor(val text: String, val x: Int, val y: Int) {
+class StepButton constructor(val text: String, val x: Int, val y: Int) {
     private var width: Int
     private var height: Int
 
@@ -35,7 +35,7 @@ class StageButton constructor(val text: String, val x: Int, val y: Int) {
     fun isClick(x: Float, y: Float): Boolean {
         val px = x.toInt()
         val py = y.toInt()
-        Timber.tag("score").d("(x,y): (${this.x},${this.y}),($px,$py) ")
+        Timber.tag("click").d("(x,y): (${this.x},${this.y}),($px,$py) ")
         return (x.toInt() in left until right) && (y.toInt() in top until bottom)
     }
 }

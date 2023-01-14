@@ -4,20 +4,19 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.BitmapFactory
 import android.media.MediaPlayer
-import android.view.ContentInfo
 import android.view.MotionEvent
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import com.learning.threadgame.R
 import com.learning.threadgame.thread.MapThread
-import com.learning.threadgame.thread.Step
+
 import timber.log.Timber
 
 
 class BaseMap(context: Context?) : SurfaceView(context), SurfaceHolder.Callback {
 
     private val myHolder: SurfaceHolder = holder
-    lateinit var myThread: MapThread
+    lateinit var mainThread: MapThread
     lateinit var bgImgs: List<BackImg>
     lateinit var uiStatus: UiStatus
     lateinit var potatoes: List<Potato>
@@ -61,20 +60,20 @@ class BaseMap(context: Context?) : SurfaceView(context), SurfaceHolder.Callback 
         backMusic.seekTo(2000)
         backMusic.start()
 
-        myThread = MapThread(myHolder, this)
-        myThread.threadRun = true
-        myThread.start()
+        mainThread = MapThread(myHolder, this)
+        mainThread.threadRun = true
+        mainThread.start()
 
     }
 
     override fun surfaceChanged(p0: SurfaceHolder, p1: Int, p2: Int, p3: Int) {}
 
     override fun surfaceDestroyed(p0: SurfaceHolder) {
-        myThread.threadRun = false
+        mainThread.threadRun = false
         var retry = true
         while (retry) {
             try {
-                myThread.join()
+                mainThread.join()
                 retry = false
             } catch (e: InterruptedException) {
                 e.printStackTrace()
@@ -116,11 +115,11 @@ class BaseMap(context: Context?) : SurfaceView(context), SurfaceHolder.Callback 
                     uiStatus.life--
                 initPotato()
             }
-        if (uiStatus.life <= 0){
+        if (uiStatus.life <= 0) {
             stage = Step.ReStart
-            if(backMusic.isPlaying) {
+            if (backMusic.isPlaying) {
                 backMusic.pause()
-                Timber.tag("score").d("pause")
+                Timber.tag("music").d("pause")
             }
 
         }
@@ -130,18 +129,17 @@ class BaseMap(context: Context?) : SurfaceView(context), SurfaceHolder.Callback 
         if (uiStatus.isClick(stage, eventX, eventY)) {
             initStageRun()
             stage = Step.Run
-            if(!backMusic.isPlaying){
+            if (!backMusic.isPlaying) {
                 backMusic.seekTo(2000)
                 backMusic.start()
-                Timber.tag("score").d("reStart")
-            }
-            else
-                Timber.tag("score").d("start")
+                Timber.tag("music").d("reStart")
+            } else
+                Timber.tag("music").d("start")
 
         }
     }
 
-    fun initStageRun() {
+    private fun initStageRun() {
         for (pto in potatoes)
             pto.initPotato()
         uiStatus.initStatus()

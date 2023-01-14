@@ -1,4 +1,4 @@
-package com.learning.threadgame.thread
+package com.learning.threadgame.model
 
 import android.graphics.Canvas
 

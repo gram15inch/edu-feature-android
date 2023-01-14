@@ -4,14 +4,13 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Typeface
-import com.learning.threadgame.thread.Stage
-import com.learning.threadgame.thread.Step
+
 
 class UiStatus : Stage {
     var score = 0
     var life = 3
-    private val startButton = StageButton("시작",420,1580)
-    private val reStartButton = StageButton("재시작",340,1620)
+    private val startButton = StepButton("시작",420,1580)
+    private val reStartButton = StepButton("재시작",340,1620)
 
     var textPaintSub = Paint().also {
         it.color = Color.WHITE
