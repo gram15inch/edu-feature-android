@@ -2,6 +2,7 @@ package com.learning.threadgame.view
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.media.MediaPlayer
 import android.view.MotionEvent
@@ -17,31 +18,34 @@ class BaseMap(context: Context?) : SurfaceView(context), SurfaceHolder.Callback 
 
     private val myHolder: SurfaceHolder = holder
     lateinit var mainThread: MapThread
-    lateinit var bgImgs: List<BackImg>
     lateinit var uiStatus: UiStatus
     lateinit var potatoes: List<Potato>
-    lateinit var backMusic: MediaPlayer
-    private val potatoImgs = listOf(
-        BitmapFactory.decodeResource(resources, R.drawable.ac_pto_1),
-        BitmapFactory.decodeResource(resources, R.drawable.ac_pto_2),
-        BitmapFactory.decodeResource(resources, R.drawable.ac_pto_3),
-        BitmapFactory.decodeResource(resources, R.drawable.ac_pto_4),
-        BitmapFactory.decodeResource(resources, R.drawable.ac_pto_5),
-        BitmapFactory.decodeResource(resources, R.drawable.ac_pto_6),
-        BitmapFactory.decodeResource(resources, R.drawable.ac_stone),
-    )
+    val bgImgs: List<BackImg>
+    val backMusic: MediaPlayer
+    val potatoImgs: List<Bitmap>
     var stage = Step.Start
 
     init {
         myHolder.addCallback(this)
-    }
-
-    override fun surfaceCreated(p0: SurfaceHolder) {
         bgImgs = listOf(
             BackImg(BitmapFactory.decodeResource(resources, R.drawable.ac_bg_start)),
             BackImg(BitmapFactory.decodeResource(resources, R.drawable.ac_bg_run)),
             BackImg(BitmapFactory.decodeResource(resources, R.drawable.ac_bg_restart)),
         )
+        potatoImgs = listOf(
+            BitmapFactory.decodeResource(resources, R.drawable.ac_pto_1),
+            BitmapFactory.decodeResource(resources, R.drawable.ac_pto_2),
+            BitmapFactory.decodeResource(resources, R.drawable.ac_pto_3),
+            BitmapFactory.decodeResource(resources, R.drawable.ac_pto_4),
+            BitmapFactory.decodeResource(resources, R.drawable.ac_pto_5),
+            BitmapFactory.decodeResource(resources, R.drawable.ac_pto_6),
+            BitmapFactory.decodeResource(resources, R.drawable.ac_stone),
+        )
+        backMusic = MediaPlayer.create(context, R.raw.bg_run)
+    }
+
+    override fun surfaceCreated(p0: SurfaceHolder) {
+
         val boxX = 260
         val boxY = 1100
         potatoes = listOf(
@@ -56,7 +60,7 @@ class BaseMap(context: Context?) : SurfaceView(context), SurfaceHolder.Callback 
             Potato(potatoImgs, boxX + 400, boxY + 400),
         )
         uiStatus = UiStatus()
-        backMusic = MediaPlayer.create(context, R.raw.bg_run)
+
         backMusic.seekTo(2000)
         backMusic.start()
 
