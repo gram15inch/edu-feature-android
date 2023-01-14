@@ -47,7 +47,8 @@ open class MapThread(private val surHolder: SurfaceHolder, val baseMap: BaseMap)
     override fun stageReStart(canvas: Canvas) {
         baseMap.bgImgs[2].draw(canvas)
         baseMap.uiStatus.draw(baseMap.stage,canvas)
-        baseMap.backMusic.stop()
+        if(baseMap.backMusic.isPlaying)
+            baseMap.backMusic.pause()
     }
 
 

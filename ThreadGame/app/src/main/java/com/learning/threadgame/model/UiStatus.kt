@@ -1,26 +1,30 @@
 package com.learning.threadgame.model
 
-import android.graphics.*
-import android.view.MotionEvent
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.Typeface
 import com.learning.threadgame.thread.Stage
 import com.learning.threadgame.thread.Step
 
 class UiStatus : Stage {
     var score = 0
     var life = 3
-    val startButton = StageButton("시작",420,1580)
+    private val startButton = StageButton("시작",420,1580)
+    private val reStartButton = StageButton("재시작",340,1620)
 
     var textPaintSub = Paint().also {
         it.color = Color.WHITE
         it.textSize = 80f
     }
-    var textPaintStep = Paint().also {
-        it.color = Color.WHITE
-        it.textSize = 170f
-    }
     var textPaintMain = Paint().also {
         it.color = Color.WHITE
         it.textSize = 120f
+    }
+    var textPainTitle= Paint().also {
+        it.color = Color.WHITE
+        it.textSize = 130f
+        it.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
     }
 
     fun draw(step:Step,canvas: Canvas) {
@@ -32,6 +36,7 @@ class UiStatus : Stage {
     }
 
     override fun stageStart(canvas: Canvas) {
+        canvas.drawText("감자 타이쿤",230f,1290f,textPainTitle)
         startButton.draw(canvas)
     }
 
@@ -46,14 +51,14 @@ class UiStatus : Stage {
 
     override fun stageReStart(canvas: Canvas) {
         canvas.drawText("SCORE: $score", 160f, 1290f, textPaintMain)
-        canvas.drawText("다시하기", 340f, 1620f, textPaintStep)
+        reStartButton.draw(canvas)
     }
 
     fun isClick(step:Step,x:Float,y:Float):Boolean{
        return when(step){
             Step.Start-> { startButton.isClick(x,y)}
             Step.Run-> {false}
-            Step.ReStart-> {startButton.isClick(x,y)}
+            Step.ReStart-> {reStartButton.isClick(x,y)}
         }
     }
     fun initStatus(){

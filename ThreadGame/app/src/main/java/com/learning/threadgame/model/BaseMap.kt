@@ -58,7 +58,9 @@ class BaseMap(context: Context?) : SurfaceView(context), SurfaceHolder.Callback 
         )
         uiStatus = UiStatus()
         backMusic = MediaPlayer.create(context, R.raw.bg_run)
+        backMusic.seekTo(2000)
         backMusic.start()
+
         myThread = MapThread(myHolder, this)
         myThread.threadRun = true
         myThread.start()
@@ -78,7 +80,6 @@ class BaseMap(context: Context?) : SurfaceView(context), SurfaceHolder.Callback 
                 e.printStackTrace()
             }
         }
-        backMusic.stop()
     }
 
 
@@ -117,8 +118,11 @@ class BaseMap(context: Context?) : SurfaceView(context), SurfaceHolder.Callback 
             }
         if (uiStatus.life <= 0){
             stage = Step.ReStart
-            backMusic.pause()
-            Timber.tag("score").d("pause")
+            if(backMusic.isPlaying) {
+                backMusic.pause()
+                Timber.tag("score").d("pause")
+            }
+
         }
     }
 
@@ -126,8 +130,14 @@ class BaseMap(context: Context?) : SurfaceView(context), SurfaceHolder.Callback 
         if (uiStatus.isClick(stage, eventX, eventY)) {
             initStageRun()
             stage = Step.Run
-            //todo 브금 재시작
-            Timber.tag("score").d("start")
+            if(!backMusic.isPlaying){
+                backMusic.seekTo(2000)
+                backMusic.start()
+                Timber.tag("score").d("reStart")
+            }
+            else
+                Timber.tag("score").d("start")
+
         }
     }
 

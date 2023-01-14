@@ -1,9 +1,6 @@
 package com.learning.threadgame.model
 
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.Rect
+import android.graphics.*
 import timber.log.Timber
 
 class StageButton constructor(val text: String, val x: Int, val y: Int) {
@@ -18,6 +15,7 @@ class StageButton constructor(val text: String, val x: Int, val y: Int) {
     private var textPaintStep = Paint().also {
         it.color = Color.WHITE
         it.textSize = 170f
+        it.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
     }
 
     init {
