@@ -1,12 +1,9 @@
-package com.learning.threadgame.model
+package com.learning.threadgame.view
 
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Rect
-import android.view.Window
 import com.learning.threadgame.thread.PotatoThread
-import timber.log.Timber
-import java.util.*
 
 class Potato constructor(val bitmap: List<Bitmap>, x: Int, y: Int) {
     private var width = 150

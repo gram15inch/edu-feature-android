@@ -1,12 +1,11 @@
 package com.learning.threadgame.thread
 
 import android.graphics.Canvas
-import android.media.audiofx.DynamicsProcessing
 
 import android.view.SurfaceHolder
-import com.learning.threadgame.model.BaseMap
-import com.learning.threadgame.model.Stage
-import com.learning.threadgame.model.Step
+import com.learning.threadgame.view.BaseMap
+import com.learning.threadgame.view.Stage
+import com.learning.threadgame.view.Step
 
 
 open class MapThread(private val surHolder: SurfaceHolder, val baseMap: BaseMap) : Thread()

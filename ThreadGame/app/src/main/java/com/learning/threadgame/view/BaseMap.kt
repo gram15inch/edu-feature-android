@@ -1,4 +1,4 @@
-package com.learning.threadgame.model
+package com.learning.threadgame.view
 
 import android.annotation.SuppressLint
 import android.content.Context

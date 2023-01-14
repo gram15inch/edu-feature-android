@@ -2,8 +2,7 @@ package com.learning.threadgame
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.WindowManager
-import com.learning.threadgame.model.BaseMap
+import com.learning.threadgame.view.BaseMap
 
 class MainActivity : AppCompatActivity() {
     lateinit var map :BaseMap

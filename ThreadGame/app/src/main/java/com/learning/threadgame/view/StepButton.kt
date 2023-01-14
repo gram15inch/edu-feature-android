@@ -1,4 +1,4 @@
-package com.learning.threadgame.model
+package com.learning.threadgame.view
 
 import android.graphics.*
 import timber.log.Timber
