@@ -14,6 +14,8 @@ class UserFragment : DataBindingFragment<FragmentUserBinding>(R.layout.fragment_
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.viewModel = viewModel
-
+        binding.signUpBtn.setOnClickListener {
+            viewModel.resistUser(viewModel.request)
+        }
     }
 }

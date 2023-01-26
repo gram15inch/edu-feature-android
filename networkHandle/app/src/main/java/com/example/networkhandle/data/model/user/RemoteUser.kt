@@ -1,4 +1,4 @@
-package com.example.networkhandle.data.model
+package com.example.networkhandle.data.model.user
 
 import com.squareup.moshi.JsonClass
 
