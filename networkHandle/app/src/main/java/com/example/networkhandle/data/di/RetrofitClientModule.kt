@@ -1,5 +1,6 @@
 package com.example.networkhandle.data.di
 
+import com.example.networkhandle.data.NullToEmptyStringAdapter
 import com.example.networkhandle.data.UserApiService
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -21,6 +22,7 @@ object RetrofitClientModule {
     fun provideMoshi(): Moshi {
         return Moshi.Builder()
             .add(KotlinJsonAdapterFactory())
+            .add(NullToEmptyStringAdapter())
             .build()
     }
 

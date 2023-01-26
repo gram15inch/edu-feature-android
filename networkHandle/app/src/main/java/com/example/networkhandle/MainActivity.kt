@@ -2,10 +2,11 @@ package com.example.networkhandle
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.example.networkhandle.base.DataBindingActivity
+import com.example.networkhandle.databinding.ActivityMainBinding
+import dagger.hilt.android.AndroidEntryPoint
 
-class MainActivity : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-    }
+@AndroidEntryPoint
+class MainActivity : DataBindingActivity<ActivityMainBinding>(R.layout.activity_main) {
+
 }
