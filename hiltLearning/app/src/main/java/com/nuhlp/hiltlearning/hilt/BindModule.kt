@@ -11,4 +11,5 @@ import dagger.hilt.android.components.ActivityComponent
 abstract class BindModule {
     @Binds
     abstract fun bindClassB(b: ClassB2): ClassB
+
 }

@@ -1,5 +1,7 @@
 package com.nuhlp.hiltlearning.basic
 
+import timber.log.Timber
+
 
 class ClassA(val b: ClassB) {
     fun executeA() {
@@ -11,12 +13,12 @@ interface ClassB {
 }
 class ClassB1() : ClassB {
     override fun executeB() {
-        // Do something
+        Timber.d("call basic B1")
     }
 }
 class ClassB2() : ClassB {
     override fun executeB() {
-        // Do something else
+        Timber.d("call basic B2")
     }
 }
 
