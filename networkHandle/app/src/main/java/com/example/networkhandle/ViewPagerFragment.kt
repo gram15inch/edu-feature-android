@@ -2,7 +2,9 @@ package com.example.networkhandle
 
 import android.os.Bundle
 import android.view.View
+import androidx.lifecycle.MutableLiveData
 import androidx.viewpager2.widget.ViewPager2
+import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.example.networkhandle.base.DataBindingFragment
 import com.example.networkhandle.databinding.FragmentViewPagerBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -11,10 +13,12 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class ViewPagerFragment :
     DataBindingFragment<FragmentViewPagerBinding>(R.layout.fragment_view_pager) {
+    val adapterIdx = MutableLiveData<String>()
+    lateinit var idxAdapter :ViewPagerAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        binding.fragment = this
         binding.vpfVpSquare.apply {
             adapter = ViewPagerAdapter(
                 arrayListOf(
@@ -22,33 +26,57 @@ class ViewPagerFragment :
                     R.drawable.bn_cat1,
                     R.drawable.bn_cat1,
                     R.drawable.bn_cat1
-                )
+                ),
+                2
             )
             orientation = ViewPager2.ORIENTATION_HORIZONTAL
-            // binding.vpfVp.setPageTransformer(ZoomOutPageTransformer()) // 에니메이션
             offscreenPageLimit = 1
+            // setPageTransformer(ZoomOutPageTransformer()) // 에니메이션
             setPageTransformer(MarginTransformer())// 마진
         }
 
-
         binding.vpfVpRect.apply {
-            adapter = ViewPagerAdapter(
+            idxAdapter = ViewPagerAdapter(
                 arrayListOf(
                     R.drawable.bn_cat4,
                     R.drawable.bn_cat4,
                     R.drawable.bn_cat4,
                     R.drawable.bn_cat4
-                )
+                ),
+                1
             )
+            adapter = idxAdapter
+
             orientation = ViewPager2.ORIENTATION_HORIZONTAL
-            // binding.vpfVp.setPageTransformer(ZoomOutPageTransformer()) // 에니메이션
-            offscreenPageLimit = 1
-            setPageTransformer(MarginTransformer())// 마진
+            //setPageTransformer(ZoomOutPageTransformer()) // 에니메이션
+            registerOnPageChangeCallback(scrollListener)
+
 
         }
 
     }
 
+    fun idxUpdate(idx:String) {
+        adapterIdx.postValue(idx)
+    }
+    val scrollListener = object : OnPageChangeCallback() {
+        override fun onPageScrolled(
+            position: Int,
+            positionOffset: Float,
+            positionOffsetPixels: Int
+        ) {
+            super.onPageScrolled(position, positionOffset, positionOffsetPixels)
+            if (positionOffsetPixels == 0) {
+                val size =  idxAdapter.item.size
+                idxUpdate("${(position % size)+1} / ${size} 모두보기")
+            }
+        }
+
+        override fun onPageSelected(position: Int) {
+            super.onPageSelected(position)
+            //mIndicator.animatePageSelected(position % num_page)
+        }
+    }
     inner class ZoomOutPageTransformer : ViewPager2.PageTransformer {
         private val MIN_SCALE = 0.85f // 뷰가 몇퍼센트로 줄어들 것인지
         private val MIN_ALPHA = 0.5f // 어두워지는 정도를 나타낸 듯 하다.

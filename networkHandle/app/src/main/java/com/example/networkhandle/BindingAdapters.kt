@@ -18,5 +18,10 @@ object BindingAdapters {
     fun bindRemoteSignUp(view: TextView, value: RemoteSignUp?) {
        view.text = value?.toString()?:"empty"
     }
+    @JvmStatic
+    @BindingAdapter("idxText")
+    fun bindIdxText(view: TextView, value: String?) {
+       view.text = value?:""
+    }
 
 }

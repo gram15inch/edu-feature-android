@@ -3,6 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
     <data>
+        <variable
+            name="fragment"
+            type="com.example.networkhandle.ViewPagerFragment" />
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -18,16 +21,28 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/vpf_vp_rect"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:clipToPadding="false"
-            android:clipChildren="false"
+            android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/vpf_vp_square"
-             />
+            tools:layout_height="300dp" />
 
+        <TextView
+            android:id="@+id/vpf_vp_idx_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="5dp"
+            android:background="@color/white"
+            android:text="@{fragment.adapterIdx}"
+            android:textSize="13sp"
+            android:padding="2dp"
+            app:layout_constraintBottom_toBottomOf="@id/vpf_vp_rect"
+            app:layout_constraintEnd_toEndOf="@+id/vpf_vp_rect"
+            tools:text="1 / 4 현재위치" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
