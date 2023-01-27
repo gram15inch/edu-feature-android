@@ -1,7 +1,6 @@
-package com.example.networkhandle
+package com.example.networkhandle.ui
 
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
+import com.example.networkhandle.R
 import com.example.networkhandle.base.DataBindingActivity
 import com.example.networkhandle.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint

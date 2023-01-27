@@ -5,12 +5,12 @@
     <data>
         <variable
             name="fragment"
-            type="com.example.networkhandle.ViewPagerFragment" />
+            type="com.example.networkhandle.ui.ViewPagerFragment" />
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ViewPagerFragment">
+        tools:context=".ui.ViewPagerFragment">
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/vpf_vp_square"

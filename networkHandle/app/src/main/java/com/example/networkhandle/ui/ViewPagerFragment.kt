@@ -1,4 +1,4 @@
-package com.example.networkhandle
+package com.example.networkhandle.ui
 
 import android.animation.Animator
 import android.animation.TimeInterpolator
@@ -10,12 +10,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
+import com.example.networkhandle.R
+import com.example.networkhandle.ViewPagerAdapter
 import com.example.networkhandle.base.DataBindingFragment
 import com.example.networkhandle.databinding.FragmentViewPagerBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import timber.log.Timber
 
 
 @AndroidEntryPoint
@@ -24,7 +25,7 @@ class ViewPagerFragment :
     val indicator = MutableLiveData<String>()
     var adapterPos = 0
     lateinit var job : Job
-    lateinit var idxAdapter :ViewPagerAdapter
+    lateinit var idxAdapter : ViewPagerAdapter
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.fragment = this

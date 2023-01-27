@@ -6,11 +6,11 @@
 
     <fragment
         android:id="@+id/userFragment"
-        android:name="com.example.networkhandle.UserFragment"
+        android:name="com.example.networkhandle.ui.UserFragment"
         android:label="UserFragment" />
     <fragment
         android:id="@+id/viewPagerFragment"
-        android:name="com.example.networkhandle.ViewPagerFragment"
+        android:name="com.example.networkhandle.ui.ViewPagerFragment"
         android:label="ViewPagerFragment" />
 
 

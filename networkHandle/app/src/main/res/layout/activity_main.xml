@@ -7,7 +7,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".MainActivity">
+        tools:context=".ui.MainActivity">
 
 
         <TextView
@@ -22,7 +22,7 @@
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/user_fcv"
-            android:name="com.example.networkhandle.ViewPagerFragment"
+            android:name="com.example.networkhandle.ui.ViewPagerFragment"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_margin="30dp"

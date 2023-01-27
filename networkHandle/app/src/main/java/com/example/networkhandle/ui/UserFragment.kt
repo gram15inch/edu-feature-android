@@ -1,8 +1,10 @@
-package com.example.networkhandle
+package com.example.networkhandle.ui
 
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
+import com.example.networkhandle.R
+import com.example.networkhandle.UserViewModel
 import com.example.networkhandle.base.DataBindingFragment
 import com.example.networkhandle.databinding.FragmentUserBinding
 import dagger.hilt.android.AndroidEntryPoint
