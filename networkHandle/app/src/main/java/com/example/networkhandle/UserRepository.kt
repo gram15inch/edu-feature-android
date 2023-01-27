@@ -12,14 +12,10 @@ class UserRepository @Inject constructor(val userApiService: UserApiService) {
 
 
     suspend fun getUsers(word:String):Response<UserResponse>{
-        return userApiService.getUsersWithResponse(word).apply {
-
-        }
+        return userApiService.getUsersWithResponse(word)
     }
     suspend fun postUsers(request: SignUpRequest):Response<SignUpResponse>{
-        return userApiService.postUsersWithResponse(request).apply {
-
-        }
+        return userApiService.postUsersWithResponse(request)
     }
 
 }

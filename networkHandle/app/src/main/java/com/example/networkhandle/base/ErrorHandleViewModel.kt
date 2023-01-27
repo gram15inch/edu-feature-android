@@ -1,4 +1,5 @@
 package com.example.networkhandle.base
+
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import retrofit2.HttpException
@@ -12,11 +13,17 @@ abstract class ErrorHandleViewModel : ViewModel() {
         throwable.printStackTrace()
 
         when (throwable) {
-            is SocketException -> {}
-            is HttpException -> {}
-            is UnknownHostException -> {}
+            is SocketException -> {
+                Timber.tag("error").d("exceptionHandler.SocketException: ${throwable.message}")
+            }
+            is HttpException -> {
+                Timber.tag("error").d("exceptionHandler.HttpException: ${throwable.message}")
+            }
+            is UnknownHostException -> {
+                Timber.tag("error").d("exceptionHandler.UnknownHostException: ${throwable.message}")
+            }
             else -> {
-                Timber.tag("error").d("Else exception: ${throwable.message}")
+                Timber.tag("error").d("exceptionHandler.elseException: ${throwable.message}")
             }
         }
     }

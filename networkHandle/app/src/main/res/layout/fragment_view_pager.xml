@@ -1,36 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
-
+    <data>
+    </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".MainActivity">
+        tools:context=".ViewPagerFragment">
 
-
-        <TextView
-            android:id="@+id/textView2"
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/vpf_vp_square"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Main Activity"
-            android:textSize="40sp"
+            android:layout_height="300dp"
+            android:clipToPadding="false"
+            android:clipChildren="false"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
-        <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/user_fcv"
-            android:name="com.example.networkhandle.ViewPagerFragment"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_margin="30dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/vpf_vp_rect"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:clipToPadding="false"
+            android:clipChildren="false"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView2"
-            app:navGraph="@navigation/nav_graph"/>
+            app:layout_constraintTop_toBottomOf="@id/vpf_vp_square"
+             />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
