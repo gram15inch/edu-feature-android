@@ -3,8 +3,11 @@ package com.example.networkhandle.ui
 import android.animation.Animator
 import android.animation.TimeInterpolator
 import android.animation.ValueAnimator
+import android.content.Context
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
@@ -14,9 +17,14 @@ import com.example.networkhandle.R
 import com.example.networkhandle.ViewPagerAdapter
 import com.example.networkhandle.base.DataBindingFragment
 import com.example.networkhandle.databinding.FragmentViewPagerBinding
+import com.google.firebase.FirebaseApp
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.ktx.storage
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import timber.log.Timber
 
 
 @AndroidEntryPoint
@@ -24,8 +32,18 @@ class ViewPagerFragment :
     DataBindingFragment<FragmentViewPagerBinding>(R.layout.fragment_view_pager) {
     val indicator = MutableLiveData<String>()
     var adapterPos = 0
-    lateinit var job : Job
-    lateinit var idxAdapter : ViewPagerAdapter
+    lateinit var job: Job
+    lateinit var idxAdapter: ViewPagerAdapter
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+
+
+        return super.onCreateView(inflater, container, savedInstanceState)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.fragment = this
@@ -74,18 +92,20 @@ class ViewPagerFragment :
         super.onPause()
         job.cancel()
     }
-    fun indicatorUpdate(idx:String) {
+
+    fun indicatorUpdate(idx: String) {
         indicator.postValue(idx)
     }
 
     fun scrollJobCreate() {
         job = lifecycleScope.launchWhenResumed {
-            while(true){
+            while (true) {
                 delay(3000)
                 binding.vpfVpBanner.setCurrentItemWithDuration(++adapterPos, 2000)
             }
         }
     }
+
     fun ViewPager2.setCurrentItemWithDuration(
         item: Int, duration: Long,
         interpolator: TimeInterpolator = AccelerateDecelerateInterpolator(),
@@ -102,17 +122,27 @@ class ViewPagerFragment :
             previousValue = currentValue
         }
 
-        animator.addListener(object :Animator.AnimatorListener {
-            override fun onAnimationStart(animation: Animator) { beginFakeDrag() }
-            override fun onAnimationEnd(animation: Animator) { endFakeDrag() }
-            override fun onAnimationCancel(animation: Animator) { /* Ignored */ }
-            override fun onAnimationRepeat(animation: Animator) { /* Ignored */ }
+        animator.addListener(object : Animator.AnimatorListener {
+            override fun onAnimationStart(animation: Animator) {
+                beginFakeDrag()
+            }
+
+            override fun onAnimationEnd(animation: Animator) {
+                endFakeDrag()
+            }
+
+            override fun onAnimationCancel(animation: Animator) { /* Ignored */
+            }
+
+            override fun onAnimationRepeat(animation: Animator) { /* Ignored */
+            }
         })
 
         animator.interpolator = interpolator
         animator.duration = duration
         animator.start()
     }
+
     val scrollListener = object : OnPageChangeCallback() {
         override fun onPageScrolled(
             position: Int,
@@ -121,8 +151,8 @@ class ViewPagerFragment :
         ) {
             super.onPageScrolled(position, positionOffset, positionOffsetPixels)
             if (positionOffsetPixels == 0) {
-                val size =  idxAdapter.item.size
-                indicatorUpdate("${(position % size)+1} / ${size} 모두보기")
+                val size = idxAdapter.item.size
+                indicatorUpdate("${(position % size) + 1} / ${size} 모두보기")
                 adapterPos = position
             }
         }
@@ -132,6 +162,7 @@ class ViewPagerFragment :
             //mIndicator.animatePageSelected(position % num_page)
         }
     }
+
     inner class ZoomOutPageTransformer : ViewPager2.PageTransformer {
         private val MIN_SCALE = 0.85f // 뷰가 몇퍼센트로 줄어들 것인지
         private val MIN_ALPHA = 0.5f // 어두워지는 정도를 나타낸 듯 하다.
