@@ -23,7 +23,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/vpf_vp_rect"
+            android:id="@+id/vpf_vp_banner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
@@ -38,11 +38,11 @@
             android:layout_marginEnd="5dp"
             android:layout_marginBottom="5dp"
             android:background="@color/white"
-            android:text="@{fragment.adapterIdx}"
+            android:text="@{fragment.indicator}"
             android:textSize="13sp"
             android:padding="2dp"
-            app:layout_constraintBottom_toBottomOf="@id/vpf_vp_rect"
-            app:layout_constraintEnd_toEndOf="@+id/vpf_vp_rect"
+            app:layout_constraintBottom_toBottomOf="@id/vpf_vp_banner"
+            app:layout_constraintEnd_toEndOf="@+id/vpf_vp_banner"
             tools:text="1 / 4 현재위치" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
