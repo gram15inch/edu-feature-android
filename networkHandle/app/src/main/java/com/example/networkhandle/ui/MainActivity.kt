@@ -17,6 +17,7 @@ class MainActivity : DataBindingActivity<ActivityMainBinding>(R.layout.activity_
         super.onCreate(savedInstanceState)
         FirebaseApp.initializeApp(this)
 
+        //todo 삭제
         Firebase.storage
             .reference.child("react/tn_react1.jpg")
             .downloadUrl

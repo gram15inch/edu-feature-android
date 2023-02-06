@@ -62,6 +62,7 @@ class ViewPagerFragment :
             // setPageTransformer(ZoomOutPageTransformer()) // 에니메이션
             setPageTransformer(MarginTransformer())// 마진
         }
+
         binding.vpfVpBanner.apply {
             idxAdapter = ViewPagerAdapter(
                 arrayListOf(
